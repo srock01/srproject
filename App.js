@@ -1,7 +1,7 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import {
   StyleSheet,
   Text,
@@ -11,7 +11,31 @@ import {
   Button,
   TouchableOpacity,
 } from "react-native";
- 
+import { initializeApp } from "firebase/app";
+import {
+  getDocs,
+  getFirestore,
+  collection,
+  firestore,
+  addDoc,
+} from "firebase/firestore/lite";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAF9QW9bvXKyWIiPpmaOgKunA51Jxe4iAw",
+  authDomain: "dripordrown-90905.firebaseapp.com",
+  databaseURL: "https://dripordrown-90905-default-rtdb.firebaseio.com",
+  projectId: "dripordrown-90905",
+  storageBucket: "dripordrown-90905.appspot.com",
+  messagingSenderId: "217796469697",
+  appId: "1:217796469697:web:3324196fa615c8c4f6c540",
+  measurementId: "G-F0RSLNR2DY",
+};
+
+require("firebase/firestore");
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
 const Stack = createNativeStackNavigator();
 
 function App() {
@@ -20,58 +44,61 @@ function App() {
       <Stack.Navigator
         initialRouteName="loginOriginal"
         screenOptions={{
-        headerShown: true
-        
-      }}>
-        <Stack.Screen name=" " component={loginOriginal} />
-        <Stack.Screen name="Login" component={login} />
-        <Stack.Screen name="Register" component={register} />
+          headerShown: true,
+        }}
+      >
+        <Stack.Screen name=" " component={LoginOriginal} />
+        <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="Register" component={Register} />
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
 
-function loginOriginal({ navigation }) {
+function LoginOriginal({ navigation }) {
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
-      
-      <Image style={styles.image} source={require("/Users/treseibert/Documents/Courses/Software-Engineering/DripOrDrown/assets/logo2.jpeg")} />
 
-      <TouchableOpacity 
-      style={styles.loginBtn}
-      onPress={() => navigation.navigate('Login')}>
+      <Image style={styles.image} source={require("./assets/logo2.jpeg")} />
+
+      <TouchableOpacity
+        style={styles.loginBtn}
+        onPress={() => navigation.navigate("Login")}
+      >
         <Text style={styles.loginText}>LOGIN</Text>
-        
       </TouchableOpacity>
 
       <Text style={styles.loginOr}>OR</Text>
 
-      <TouchableOpacity style={styles.loginBtn}
-      onPress={() => navigation.navigate('Register')}>
+      <TouchableOpacity
+        style={styles.loginBtn}
+        onPress={() => navigation.navigate("Register")}
+      >
         <Text style={styles.registerText}>REGISTER</Text>
       </TouchableOpacity>
     </View>
-  ); 
+  );
 }
 
-function login() {
+function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   return (
     <>
-    <View style={styles.container}>
-      <StatusBar style="auto" />
+      <View style={styles.container}>
+        <StatusBar style="auto" />
 
-      <Image style={styles.image} source={require("/Users/treseibert/Documents/Courses/Software-Engineering/DripOrDrown/assets/logo2.jpeg")} />
+        <Image style={styles.image} source={require("./assets/logo2.jpeg")} />
 
-      <View style={styles.inputView}>
-        <TextInput
-          style={styles.TextInput}
-          placeholder="Email"
-          placeholderTextColor="#003f5c"
-          onChangeText={(email) => setEmail(email)} />
-      </View>
+        <View style={styles.inputView}>
+          <TextInput
+            style={styles.TextInput}
+            placeholder="Email"
+            placeholderTextColor="#003f5c"
+            onChangeText={(email) => setEmail(email)}
+          />
+        </View>
 
         <View style={styles.inputView}>
           <TextInput
@@ -79,7 +106,8 @@ function login() {
             placeholder="Password"
             placeholderTextColor="#003f5c"
             secureTextEntry={true}
-            onChangeText={(password) => setPassword(password)} />
+            onChangeText={(password) => setPassword(password)}
+          />
         </View>
 
         <TouchableOpacity>
@@ -87,30 +115,31 @@ function login() {
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.loginBtn}>
-        <Text style={styles.registerText}>LOGIN</Text>
-      </TouchableOpacity>
-
-    </View></>
+          <Text style={styles.registerText}>LOGIN</Text>
+        </TouchableOpacity>
+      </View>
+    </>
   );
 }
 
-function register() {
+function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   return (
     <>
-    <View style={styles.container}>
-      <StatusBar style="auto" />
+      <View style={styles.container}>
+        <StatusBar style="auto" />
 
-      <Image style={styles.image} source={require("/Users/treseibert/Documents/Courses/Software-Engineering/DripOrDrown/assets/logo2.jpeg")} />
+        <Image style={styles.image} source={require("./assets/logo2.jpeg")} />
 
-      <View style={styles.inputView}>
-        <TextInput
-          style={styles.TextInput}
-          placeholder="Email"
-          placeholderTextColor="#003f5c"
-          onChangeText={(email) => setEmail(email)} />
-      </View>
+        <View style={styles.inputView}>
+          <TextInput
+            style={styles.TextInput}
+            placeholder="Email"
+            placeholderTextColor="#003f5c"
+            onChangeText={(email) => setEmail(email)}
+          />
+        </View>
 
         <View style={styles.inputView}>
           <TextInput
@@ -118,19 +147,32 @@ function register() {
             placeholder="Password"
             placeholderTextColor="#003f5c"
             secureTextEntry={true}
-            onChangeText={(password) => setPassword(password)} />
+            onChangeText={(password) => setPassword(password)}
+          />
         </View>
 
-        <TouchableOpacity style={styles.loginBtn}>
-        <Text style={styles.registerText}>REGISTER</Text>
-      </TouchableOpacity>
-
-    </View></>
+        <TouchableOpacity style={styles.loginBtn} onPress={registerPress}>
+          <Text style={styles.registerText}>REGISTER</Text>
+        </TouchableOpacity>
+      </View>
+    </>
   );
 }
 
+async function registerPress() {
+  try {
+    const docRef = await addDoc(collection(db, "users"), {
+      username: "TEST",
+      password: "TEST",
+    });
+    console.log("Document written with ID: ", docRef.id);
+  } catch (e) {
+    console.error("Error adding document: ", e);
+  }
+}
+
 export default App;
- 
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -138,9 +180,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 5,
-    borderColor: 'white',
+    borderColor: "white",
   },
- 
+
   inputView: {
     backgroundColor: "white",
     borderRadius: 30,
@@ -149,27 +191,27 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     alignItems: "center",
   },
- 
+
   TextInput: {
     height: 50,
     flex: 1,
     padding: 10,
     marginLeft: 20,
   },
- 
+
   forgot_button: {
     height: 30,
     marginBottom: 30,
-    color: "white"
+    color: "white",
   },
 
   DripOrDrownText: {
     color: "white",
-    fontSize: '35px',
+    fontSize: "35px",
     fontWeight: "bold",
     paddingBottom: 100,
   },
- 
+
   loginBtn: {
     width: "80%",
     borderRadius: 25,
@@ -181,7 +223,7 @@ const styles = StyleSheet.create({
   },
   loginOr: {
     paddingTop: 20,
-    color: 'white',
+    color: "white",
     fontSize: 15,
   },
   image: {
