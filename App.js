@@ -151,7 +151,10 @@ function Register() {
           />
         </View>
 
-        <TouchableOpacity style={styles.loginBtn} onPress={registerPress}>
+        <TouchableOpacity
+          style={styles.loginBtn}
+          onPress={() => registerPress(email, password)}
+        >
           <Text style={styles.registerText}>REGISTER</Text>
         </TouchableOpacity>
       </View>
@@ -159,11 +162,11 @@ function Register() {
   );
 }
 
-async function registerPress() {
+async function registerPress(email, password) {
   try {
     const docRef = await addDoc(collection(db, "users"), {
-      username: "TEST",
-      password: "TEST",
+      username: email,
+      password: password,
     });
     console.log("Document written with ID: ", docRef.id);
   } catch (e) {
