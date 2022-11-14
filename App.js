@@ -18,6 +18,8 @@ import {
   collection,
   firestore,
   addDoc,
+  doc,
+  getDoc,
 } from "firebase/firestore/lite";
 
 const firebaseConfig = {
@@ -114,7 +116,10 @@ function Login() {
           <Text style={styles.forgot_button}>Forgot Password?</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.loginBtn}>
+        <TouchableOpacity
+          style={styles.loginBtn}
+          onPress={() => loginPress(email, password)}
+        >
           <Text style={styles.registerText}>LOGIN</Text>
         </TouchableOpacity>
       </View>
@@ -172,6 +177,14 @@ async function registerPress(email, password) {
   } catch (e) {
     console.error("Error adding document: ", e);
   }
+}
+
+async function loginPress(email, password) {
+  console.log("Email: " + email);
+  console.log("Password: " + password);
+  const usersRef = collection(db, "users");
+  const q = query(usersRef, where("email", "==", email));
+  if (q.length > 0) console.log("user exists");
 }
 
 export default App;
