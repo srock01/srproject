@@ -1,250 +1,146 @@
-import { StatusBar } from "expo-status-bar";
-import React, { useState } from "react";
-import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  TextInput,
-  Button,
-  TouchableOpacity,
-} from "react-native";
-import { initializeApp } from "firebase/app";
+import React, { useState } from 'react';
+import {Node} from 'react';
+import {initializeApp} from 'firebase/app';
 import {
   getDocs,
   getFirestore,
   collection,
   firestore,
-  addDoc,
-  doc,
-  getDoc,
-} from "firebase/firestore/lite";
+} from 'firebase/firestore/lite';
+//import {firebase, db} from './firebase/firebase';
+import {
+  SafeAreaView,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  useColorScheme,
+  View,
+} from 'react-native';
+
+import {
+  Colors,
+  DebugInstructions,
+  Header,
+  LearnMoreLinks,
+  ReloadInstructions,
+} from 'react-native/Libraries/NewAppScreen';
+
+import Clothes from './src/component/Clothes';
+import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
+
+import HomeMenu from './src/screens/HomeMenu';
+import Closet from './src/screens/Closet';
+import LoadIn from './src/screens/LoadIn';
+import LogIn from './src/screens/LogIn';
+import SignUp from './src/screens/SignUp';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAF9QW9bvXKyWIiPpmaOgKunA51Jxe4iAw",
-  authDomain: "dripordrown-90905.firebaseapp.com",
-  databaseURL: "https://dripordrown-90905-default-rtdb.firebaseio.com",
-  projectId: "dripordrown-90905",
-  storageBucket: "dripordrown-90905.appspot.com",
-  messagingSenderId: "217796469697",
-  appId: "1:217796469697:web:3324196fa615c8c4f6c540",
-  measurementId: "G-F0RSLNR2DY",
+  apiKey: 'AIzaSyAF9QW9bvXKyWIiPpmaOgKunA51Jxe4iAw',
+  authDomain: 'dripordrown-90905.firebaseapp.com',
+  databaseURL: 'https://dripordrown-90905-default-rtdb.firebaseio.com',
+  projectId: 'dripordrown-90905',
+  storageBucket: 'dripordrown-90905.appspot.com',
+  messagingSenderId: '217796469697',
+  appId: '1:217796469697:web:3324196fa615c8c4f6c540',
+  measurementId: 'G-F0RSLNR2DY',
 };
 
-require("firebase/firestore");
+const fbApp = initializeApp(firebaseConfig);
+const db = getFirestore(fbApp);
+const Stack = createStackNavigator();
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
 
-const Stack = createNativeStackNavigator();
 
-function App() {
+/* $FlowFixMe[missing-local-annot] The type annotation(s) required by Flow's
+ * LTI update could not be added via codemod */
+const Section = ({children, title}) => {
+  const isDarkMode = useColorScheme() === 'dark';
   return (
-    <NavigationContainer>
-      <Stack.Navigator
-        initialRouteName="loginOriginal"
-        screenOptions={{
-          headerShown: true,
-        }}
-      >
-        <Stack.Screen name=" " component={LoginOriginal} />
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="Register" component={Register} />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
-}
-
-function LoginOriginal({ navigation }) {
-  return (
-    <View style={styles.container}>
-      <StatusBar style="auto" />
-
-      <Image style={styles.image} source={require("./assets/logo2.jpeg")} />
-
-      <TouchableOpacity
-        style={styles.loginBtn}
-        onPress={() => navigation.navigate("Login")}
-      >
-        <Text style={styles.loginText}>LOGIN</Text>
-      </TouchableOpacity>
-
-      <Text style={styles.loginOr}>OR</Text>
-
-      <TouchableOpacity
-        style={styles.loginBtn}
-        onPress={() => navigation.navigate("Register")}
-      >
-        <Text style={styles.registerText}>REGISTER</Text>
-      </TouchableOpacity>
+    <View style={styles.sectionContainer}>
+      <Text
+        style={[
+          styles.sectionTitle,
+          {
+            color: isDarkMode ? Colors.white : Colors.black,
+          },
+        ]}>
+        {title}
+      </Text>
+      <Text
+        style={[
+          styles.sectionDescription,
+          {
+            color: isDarkMode ? Colors.light : Colors.dark,
+          },
+        ]}>
+        {children}
+      </Text>
     </View>
   );
-}
+};
 
-function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+const App = () => {
+  const isDarkMode = useColorScheme() === 'dark';
+
+  const backgroundStyle = {
+    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+  };
+
+  const [checking,setIsChecking] = React.useState(true);
+  //console.log(users);
+
   return (
-    <>
-      <View style={styles.container}>
-        <StatusBar style="auto" />
 
-        <Image style={styles.image} source={require("./assets/logo2.jpeg")} />
+        <NavigationContainer>
+          <Stack.Navigator
+            initialRouteName="loginOriginal"
+            screenOptions={{
+            headerShown: false
 
-        <View style={styles.inputView}>
-          <TextInput
-            style={styles.TextInput}
-            placeholder="Email"
-            placeholderTextColor="#003f5c"
-            onChangeText={(email) => setEmail(email)}
-          />
-        </View>
+        }}>
+            <Stack.Screen name="LoadIn" component={LoadIn} />
+            <Stack.Screen name="LogIn" component={LogIn} />
+            <Stack.Screen name="SignUp" component={SignUp} />
+            <Stack.Screen name="HomeMenu" component={HomeMenu} />
+            <Stack.Screen name="Closet" component={Closet} />
 
-        <View style={styles.inputView}>
-          <TextInput
-            style={styles.TextInput}
-            placeholder="Password"
-            placeholderTextColor="#003f5c"
-            secureTextEntry={true}
-            onChangeText={(password) => setPassword(password)}
-          />
-        </View>
+          </Stack.Navigator>
+        </NavigationContainer>
 
-        <TouchableOpacity>
-          <Text style={styles.forgot_button}>Forgot Password?</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.loginBtn}
-          onPress={() => loginPress(email, password)}
-        >
-          <Text style={styles.registerText}>LOGIN</Text>
-        </TouchableOpacity>
-      </View>
-    </>
   );
-}
-
-function Register() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  return (
-    <>
-      <View style={styles.container}>
-        <StatusBar style="auto" />
-
-        <Image style={styles.image} source={require("./assets/logo2.jpeg")} />
-
-        <View style={styles.inputView}>
-          <TextInput
-            style={styles.TextInput}
-            placeholder="Email"
-            placeholderTextColor="#003f5c"
-            onChangeText={(email) => setEmail(email)}
-          />
-        </View>
-
-        <View style={styles.inputView}>
-          <TextInput
-            style={styles.TextInput}
-            placeholder="Password"
-            placeholderTextColor="#003f5c"
-            secureTextEntry={true}
-            onChangeText={(password) => setPassword(password)}
-          />
-        </View>
-
-        <TouchableOpacity
-          style={styles.loginBtn}
-          onPress={() => registerPress(email, password)}
-        >
-          <Text style={styles.registerText}>REGISTER</Text>
-        </TouchableOpacity>
-      </View>
-    </>
-  );
-}
-
-async function registerPress(email, password) {
-  try {
-    const docRef = await addDoc(collection(db, "users"), {
-      username: email,
-      password: password,
-    });
-    console.log("Document written with ID: ", docRef.id);
-  } catch (e) {
-    console.error("Error adding document: ", e);
-  }
-}
-
-async function loginPress(email, password) {
-  console.log("Email: " + email);
-  console.log("Password: " + password);
-  const usersRef = collection(db, "users");
-  const q = query(usersRef, where("email", "==", email));
-  if (q.length > 0) console.log("user exists");
-}
-
-export default App;
+};
+/*isSignedIn ? (
+          <>
+            <Stack.Screen name="HomeMenu" component={HomeMenu} />
+            <Stack.Screen name="Closet" component={Closet} />
+          </>
+        ) : (
+          <>
+            <Stack.Screen name="LogIn" component={LogIn} />
+            <Stack.Screen name="LoadIn" component={LoadIn} />
+            <Stack.Screen name="SignUp" component={SignUp} />
+          </>
+        );*/
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#1C4BA5",
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 5,
-    borderColor: "white",
+  sectionContainer: {
+    marginTop: 32,
+    paddingHorizontal: 24,
   },
-
-  inputView: {
-    backgroundColor: "white",
-    borderRadius: 30,
-    width: "70%",
-    height: 45,
-    marginBottom: 20,
-    alignItems: "center",
+  sectionTitle: {
+    fontSize: 24,
+    fontWeight: '600',
   },
-
-  TextInput: {
-    height: 50,
-    flex: 1,
-    padding: 10,
-    marginLeft: 20,
+  sectionDescription: {
+    marginTop: 8,
+    fontSize: 18,
+    fontWeight: '400',
   },
-
-  forgot_button: {
-    height: 30,
-    marginBottom: 30,
-    color: "white",
-  },
-
-  DripOrDrownText: {
-    color: "white",
-    fontSize: "35px",
-    fontWeight: "bold",
-    paddingBottom: 100,
-  },
-
-  loginBtn: {
-    width: "80%",
-    borderRadius: 25,
-    height: 50,
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 20,
-    backgroundColor: "white",
-  },
-  loginOr: {
-    paddingTop: 20,
-    color: "white",
-    fontSize: 15,
-  },
-  image: {
-    width: 300,
-    height: 300,
-    marginBottom: 50,
+  highlight: {
+    fontWeight: '700',
   },
 });
+
+export default App;
