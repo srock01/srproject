@@ -12,27 +12,6 @@ import {
 } from 'firebase/firestore/lite';
 import { color } from 'react-native-reanimated';
 
-clothesList= ({ name, type, weather   }) => {
-  
-  return (
-  
-  <View style={styles.list}>
-    <View style={styles.listingRatingContainer}>
-      
-      
-    </View>
-    <TouchableOpacity style={styles.items}>
-      <View style={styles.budgetTagsContainer}>
-        <Text style={styles.name}>{name}</Text>
-        <Text style={styles.type}>{type}</Text>
-        <Text style={styles.weather}>{weather}</Text> 
-      </View>
-    </TouchableOpacity>
-    
-  </View>
-)
-
-}
 
 export default function Closet({navigation}) {
   const [clothes, setClothes] = useState([
