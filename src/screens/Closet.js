@@ -1,7 +1,7 @@
-import React from 'react';
+import React,  { useState } from 'react';
 import {View, Text, StyleSheet, Image, FlatList, TouchableOpacity} from 'react-native';
 //import Clothes from '../component/Clothes';
-import { useNavigation } from '@react-navigation/native';
+import  useNavigation  from '@react-navigation/native';
 
 import {initializeApp} from 'firebase/app';
 import {
@@ -11,163 +11,8 @@ import {
   firestore,
 } from 'firebase/firestore/lite';
 import { color } from 'react-native-reanimated';
-const vlothes = [
-  {
-    id: 1,
-    name: 'Blue Adidas Sweatshirt',
-    type: 'shirt',
-    weather: 'cool',
-    
-  },
-  {
-    id: 2,
-    name: 'Black Adidas Trackpants',
-    type: 'pants',
-    weather: 'cool',
-    
-  },
-  {
-    id: 3,
-    name: 'Adidas Shorts',
-    type: 'shorts',
-    weather: 'cool',
-    
-  },
-  {
-    id: 4,
-    name: 'Blue Adidas Sneakers',
-    type: 'sneakers',
-    weather: 'any',
-    
-  },
-  {
-    id: 5,
-    name: 'Red Sweater',
-    type: 'shirt',
-    weather: 'cool',
-    
-  },
-  {
-    id: 6,
-    name: 'Green Tee Shirt',
-    type: 'shirt',
-    weather: 'warm',
-  },
-  {
-    
-    id: 7,
-    name: 'Blue Adidas Sweatshirt',
-    type: 'shirt',
-    weather: 'cool',
-    
-  },
-  {
-    id: 8,
-    name: 'Black Adidas Trackpants',
-    type: 'pants',
-    weather: 'cool',
-    
-  },
-  {
-    id: 9,
-    name: 'Adidas Shorts',
-    type: 'shorts',
-    weather: 'cool',
-    
-  },
-  {
-    id: 10,
-    name: 'Blue Adidas Sneakers',
-    type: 'sneakers',
-    weather: 'any',
-    
-  },
-  {
-    id: 11,
-    name: 'Red Sweater',
-    type: 'shirt',
-    weather: 'cool',
-    
-  },
-  {
-    id: 12,
-    name: 'Green Tee Shirt',
-    type: 'shirt',
-    weather: 'warm',
-    
-  },
-  {
-    id: 13,
-    name: 'Adidas Shorts',
-    type: 'shorts',
-    weather: 'cool',
-    
-  },
-  {
-    id: 14,
-    name: 'Blue Adidas Sneakers',
-    type: 'sneakers',
-    weather: 'any',
-    
-  },
-  {
-    id: 15,
-    name: 'Red Sweater',
-    type: 'shirt',
-    weather: 'cool',
-    
-  },
-  {
-    id: 16,
-    name: 'Green Tee Shirt',
-    type: 'shirt',
-    weather: 'warm',
-  },
-  {
-    
-    id: 17,
-    name: 'Blue Adidas Sweatshirt',
-    type: 'shirt',
-    weather: 'cool',
-    
-  },
-  {
-    id: 18,
-    name: 'Black Adidas Trackpants',
-    type: 'pants',
-    weather: 'cool',
-    
-  },
-  {
-    id: 19,
-    name: 'Adidas Shorts',
-    type: 'shorts',
-    weather: 'cool',
-    
-  },
-  {
-    id: 20,
-    name: 'Blue Adidas Sneakers',
-    type: 'sneakers',
-    weather: 'any',
-    
-  },
-  {
-    id: 21,
-    name: 'Red Sweater',
-    type: 'shirt',
-    weather: 'cool',
-    
-  },
-  {
-    id: 22,
-    name: 'Green Tee Shirt',
-    type: 'shirt',
-    weather: 'warm',
-    
-  },
-]
-clothesList= ({ name, type, weather,    }) => {
+
+clothesList= ({ name, type, weather   }) => {
   
   return (
   
@@ -176,8 +21,7 @@ clothesList= ({ name, type, weather,    }) => {
       
       
     </View>
-    <TouchableOpacity style={styles.items}
-    onPress={() => navigation.navigate('Closet')}>
+    <TouchableOpacity style={styles.items}>
       <View style={styles.budgetTagsContainer}>
         <Text style={styles.name}>{name}</Text>
         <Text style={styles.type}>{type}</Text>
@@ -191,7 +35,162 @@ clothesList= ({ name, type, weather,    }) => {
 }
 
 export default function Closet({navigation}) {
-  
+  const [clothes, setClothes] = useState([
+    {
+      id: 1,
+      name: 'Blue Adidas Sweatshirt',
+      type: 'shirt',
+      weather: 'cool',
+      
+    },
+    {
+      id: 2,
+      name: 'Black Adidas Trackpants',
+      type: 'pants',
+      weather: 'cool',
+      
+    },
+    {
+      id: 3,
+      name: 'Adidas Shorts',
+      type: 'shorts',
+      weather: 'cool',
+      
+    },
+    {
+      id: 4,
+      name: 'Blue Adidas Sneakers',
+      type: 'sneakers',
+      weather: 'any',
+      
+    },
+    {
+      id: 5,
+      name: 'Red Sweater',
+      type: 'shirt',
+      weather: 'cool',
+      
+    },
+    {
+      id: 6,
+      name: 'Green Tee Shirt',
+      type: 'shirt',
+      weather: 'warm',
+    },
+    {
+      
+      id: 7,
+      name: 'Blue Adidas Sweatshirt',
+      type: 'shirt',
+      weather: 'cool',
+      
+    },
+    {
+      id: 8,
+      name: 'Black Adidas Trackpants',
+      type: 'pants',
+      weather: 'cool',
+      
+    },
+    {
+      id: 9,
+      name: 'Adidas Shorts',
+      type: 'shorts',
+      weather: 'cool',
+      
+    },
+    {
+      id: 10,
+      name: 'Blue Adidas Sneakers',
+      type: 'sneakers',
+      weather: 'any',
+      
+    },
+    {
+      id: 11,
+      name: 'Red Sweater',
+      type: 'shirt',
+      weather: 'cool',
+      
+    },
+    {
+      id: 12,
+      name: 'Green Tee Shirt',
+      type: 'shirt',
+      weather: 'warm',
+      
+    },
+    {
+      id: 13,
+      name: 'Adidas Shorts',
+      type: 'shorts',
+      weather: 'cool',
+      
+    },
+    {
+      id: 14,
+      name: 'Blue Adidas Sneakers',
+      type: 'sneakers',
+      weather: 'any',
+      
+    },
+    {
+      id: 15,
+      name: 'Red Sweater',
+      type: 'shirt',
+      weather: 'cool',
+      
+    },
+    {
+      id: 16,
+      name: 'Green Tee Shirt',
+      type: 'shirt',
+      weather: 'warm',
+    },
+    {
+      
+      id: 17,
+      name: 'Blue Adidas Sweatshirt',
+      type: 'shirt',
+      weather: 'cool',
+      
+    },
+    {
+      id: 18,
+      name: 'Black Adidas Trackpants',
+      type: 'pants',
+      weather: 'cool',
+      
+    },
+    {
+      id: 19,
+      name: 'Adidas Shorts',
+      type: 'shorts',
+      weather: 'cool',
+      
+    },
+    {
+      id: 20,
+      name: 'Blue Adidas Sneakers',
+      type: 'sneakers',
+      weather: 'any',
+      
+    },
+    {
+      id: 21,
+      name: 'Red Sweater',
+      type: 'shirt',
+      weather: 'cool',
+      
+    },
+    {
+      id: 22,
+      name: 'Green Tee Shirt',
+      type: 'shirt',
+      weather: 'warm',
+      
+    },
+  ]);
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.header}>
@@ -207,9 +206,19 @@ export default function Closet({navigation}) {
       </View>
       <View style={{ flex: 1,paddingTop:15, paddingBottom: 80, height: 600}}>
         <FlatList 
-          data={vlothes}
-          keyExtractor={item => item.id.toString()}
-          renderItem={({item}) => clothesList(item)}
+          data={clothes}
+          renderItem={({item}) => (
+              <View style={styles.list}>
+                <TouchableOpacity style={styles.items}
+                onPress={() => navigation.navigate('Article', { name: item.name , type:item.type,weather:item.weather})}>
+                  <View style={styles.budgetTagsContainer}>
+                    <Text style={styles.name}>{item.name}</Text>
+                    <Text style={styles.type}>{item.type}</Text>
+                    <Text style={styles.weather}>{item.weather}</Text> 
+                  </View>
+                </TouchableOpacity>
+                
+              </View>)}
           
         />
       </View>
