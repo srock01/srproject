@@ -6,6 +6,10 @@ import {
   getFirestore,
   collection,
   firestore,
+  query,
+  getDoc,
+  setDoc,
+  doc,
 } from 'firebase/firestore/lite';
 import {
   SafeAreaView,
@@ -79,11 +83,19 @@ export default function LogIn() {
 }
 
 async function loginPress(email, password) {
-  console.log("Email: " + email);
-  console.log("Password: " + password);
-  const usersRef = collection(db, "users");
-  const q = query(usersRef, where("email", "==", email));
-  if (q.length > 0) console.log("user exists");
+  let user = await getDoc(doc(db, "users", email));
+  if (user.exists() && password === user.get("password")) {
+    if (password === user.get("password")) {
+      //login to homepage
+      navigation.navigate()
+      console.log("Login Successful.");
+    } else {
+      //incorrect password
+      console.log("Incorrect password.");
+    }
+  } else {
+    console.log("User does not exist.");
+  }
 }
 
 const styles = StyleSheet.create({

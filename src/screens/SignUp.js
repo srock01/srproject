@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import {initializeApp} from 'firebase/app';
 import {
   getDocs,
-    getFirestore,
-    collection,
-    firestore,
-    addDoc,
-    doc,
-    getDoc,
+  getFirestore,
+  collection,
+  firestore,
+  addDoc,
+  doc,
+  getDoc,
+  setDoc,
 } from 'firebase/firestore/lite';
 import {
   SafeAreaView,
@@ -78,11 +79,13 @@ export default function SignUp() {
 
 async function registerPress(email, password) {
   try {
-    const docRef = await addDoc(collection(db, "users"), {
-      username: email,
-      password: password,
-    });
-    console.log("Document written with ID: ", docRef.id);
+    let user = getDoc(doc(db, "users", email));
+    if ((await user).exists()) {
+      console.log("Creation Failed. User already exists");
+    } else {
+      await setDoc(doc(db, "users", email), { password: password });
+      console.log('Account Created.');
+    }
   } catch (e) {
     console.error("Error adding document: ", e);
   }
