@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import {Node} from 'react';
-import {initializeApp} from 'firebase/app';
+import React, { useState } from "react";
+import { Node } from "react";
+import { initializeApp } from "firebase/app";
 import {
   getDocs,
   getFirestore,
@@ -10,7 +10,7 @@ import {
   getDoc,
   setDoc,
   doc,
-} from 'firebase/firestore/lite';
+} from "firebase/firestore/lite";
 import {
   SafeAreaView,
   ScrollView,
@@ -23,7 +23,7 @@ import {
   View,
   Button,
   TouchableOpacity,
-} from 'react-native';
+} from "react-native";
 const firebaseConfig = {
   apiKey: "AIzaSyAF9QW9bvXKyWIiPpmaOgKunA51Jxe4iAw",
   authDomain: "dripordrown-90905.firebaseapp.com",
@@ -40,23 +40,27 @@ require("firebase/firestore");
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-export default function LogIn() {
+export default function LogIn({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   return (
     <>
-    <View style={styles.container}>
-      <StatusBar style="auto" />
+      <View style={styles.container}>
+        <StatusBar style="auto" />
 
-      <Image style={styles.image} source={require("../../assets/logo2.jpeg")} />
+        <Image
+          style={styles.image}
+          source={require("../../assets/logo2.jpeg")}
+        />
 
-      <View style={styles.inputView}>
-        <TextInput
-          style={styles.TextInput}
-          placeholder="Email"
-          placeholderTextColor="#003f5c"
-          onChangeText={(email) => setEmail(email)} />
-      </View>
+        <View style={styles.inputView}>
+          <TextInput
+            style={styles.TextInput}
+            placeholder="Email"
+            placeholderTextColor="#003f5c"
+            onChangeText={(email) => setEmail(email)}
+          />
+        </View>
 
         <View style={styles.inputView}>
           <TextInput
@@ -64,7 +68,8 @@ export default function LogIn() {
             placeholder="Password"
             placeholderTextColor="#003f5c"
             secureTextEntry={true}
-            onChangeText={(password) => setPassword(password)} />
+            onChangeText={(password) => setPassword(password)}
+          />
         </View>
 
         <TouchableOpacity>
@@ -73,21 +78,21 @@ export default function LogIn() {
 
         <TouchableOpacity
           style={styles.loginBtn}
-          onPress={() => loginPress(email, password)}
+          onPress={() => loginPress(email, password, navigation)}
         >
-        <Text style={styles.registerText}>LOGIN</Text>
-      </TouchableOpacity>
-
-    </View></>
+          <Text style={styles.registerText}>LOGIN</Text>
+        </TouchableOpacity>
+      </View>
+    </>
   );
 }
 
-async function loginPress(email, password) {
+async function loginPress(email, password, navigation) {
   let user = await getDoc(doc(db, "users", email));
-  if (user.exists() && password === user.get("password")) {
-    if (password === user.get("password")) {
+  if (user.exists()) {
+    if (password === (await user.get("password"))) {
       //login to homepage
-      navigation.navigate()
+      navigation.navigate("HomeMenu");
       console.log("Login Successful.");
     } else {
       //incorrect password
@@ -105,7 +110,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 5,
-    borderColor: 'white',
+    borderColor: "white",
   },
 
   inputView: {
@@ -127,12 +132,12 @@ const styles = StyleSheet.create({
   forgot_button: {
     height: 30,
     marginBottom: 30,
-    color: "white"
+    color: "white",
   },
 
   DripOrDrownText: {
     color: "white",
-    fontSize: '35px',
+    fontSize: "35px",
     fontWeight: "bold",
     paddingBottom: 100,
   },
@@ -148,7 +153,7 @@ const styles = StyleSheet.create({
   },
   loginOr: {
     paddingTop: 20,
-    color: 'white',
+    color: "white",
     fontSize: 15,
   },
   image: {

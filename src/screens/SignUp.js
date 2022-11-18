@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import {initializeApp} from 'firebase/app';
+import React, { useState } from "react";
+import { initializeApp } from "firebase/app";
 import {
   getDocs,
   getFirestore,
@@ -9,7 +9,7 @@ import {
   doc,
   getDoc,
   setDoc,
-} from 'firebase/firestore/lite';
+} from "firebase/firestore/lite";
 import {
   SafeAreaView,
   ScrollView,
@@ -22,7 +22,7 @@ import {
   View,
   Button,
   TouchableOpacity,
-} from 'react-native';
+} from "react-native";
 const firebaseConfig = {
   apiKey: "AIzaSyAF9QW9bvXKyWIiPpmaOgKunA51Jxe4iAw",
   authDomain: "dripordrown-90905.firebaseapp.com",
@@ -44,18 +44,22 @@ export default function SignUp() {
   const [password, setPassword] = useState("");
   return (
     <>
-    <View style={styles.container}>
-      <StatusBar style="auto" />
+      <View style={styles.container}>
+        <StatusBar style="auto" />
 
-      <Image style={styles.image} source={require("../../assets/logo2.jpeg")} />
+        <Image
+          style={styles.image}
+          source={require("../../assets/logo2.jpeg")}
+        />
 
-      <View style={styles.inputView}>
-        <TextInput
-          style={styles.TextInput}
-          placeholder="Email"
-          placeholderTextColor="#003f5c"
-          onChangeText={(email) => setEmail(email)} />
-      </View>
+        <View style={styles.inputView}>
+          <TextInput
+            style={styles.TextInput}
+            placeholder="Email"
+            placeholderTextColor="#003f5c"
+            onChangeText={(email) => setEmail(email)}
+          />
+        </View>
 
         <View style={styles.inputView}>
           <TextInput
@@ -63,28 +67,29 @@ export default function SignUp() {
             placeholder="Password"
             placeholderTextColor="#003f5c"
             secureTextEntry={true}
-            onChangeText={(password) => setPassword(password)} />
+            onChangeText={(password) => setPassword(password)}
+          />
         </View>
 
         <TouchableOpacity
           style={styles.loginBtn}
           onPress={() => registerPress(email, password)}
         >
-        <Text style={styles.registerText}>REGISTER</Text>
-      </TouchableOpacity>
-
-    </View></>
+          <Text style={styles.registerText}>REGISTER</Text>
+        </TouchableOpacity>
+      </View>
+    </>
   );
 }
 
 async function registerPress(email, password) {
   try {
-    let user = getDoc(doc(db, "users", email));
-    if ((await user).exists()) {
+    let user = await getDoc(doc(db, "users", email));
+    if (user.exists()) {
       console.log("Creation Failed. User already exists");
     } else {
       await setDoc(doc(db, "users", email), { password: password });
-      console.log('Account Created.');
+      console.log("Account Created.");
     }
   } catch (e) {
     console.error("Error adding document: ", e);
@@ -98,7 +103,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 5,
-    borderColor: 'white',
+    borderColor: "white",
   },
 
   inputView: {
@@ -120,12 +125,12 @@ const styles = StyleSheet.create({
   forgot_button: {
     height: 30,
     marginBottom: 30,
-    color: "white"
+    color: "white",
   },
 
   DripOrDrownText: {
     color: "white",
-    fontSize: '35px',
+    fontSize: "35px",
     fontWeight: "bold",
     paddingBottom: 100,
   },
@@ -141,7 +146,7 @@ const styles = StyleSheet.create({
   },
   loginOr: {
     paddingTop: 20,
-    color: 'white',
+    color: "white",
     fontSize: 15,
   },
   image: {
