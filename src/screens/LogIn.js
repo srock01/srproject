@@ -58,6 +58,7 @@ export default function LogIn({ navigation }) {
             style={styles.TextInput}
             placeholder="Email"
             placeholderTextColor="#003f5c"
+            keyboardType="email-address"
             onChangeText={(email) => setEmail(email)}
           />
         </View>
@@ -127,6 +128,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     marginLeft: 20,
+    textAlign: "center",
   },
 
   forgot_button: {
