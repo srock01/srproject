@@ -1,6 +1,6 @@
 import React  from 'react';
 import { View, Text, StyleSheet, Button, FlatList, TouchableOpacity } from 'react-native';
-import  { ListNavigator } from "./ListNavigator";
+
 //import navigation from '/Users/seanrock/Downloads/DripOrDrown/App.js'
 
 
