@@ -1,34 +1,34 @@
-import React from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  Button,
-  FlatList,
-  TouchableOpacity,
-} from "react-native";
-
+import React  from 'react';
+import { View, Text, StyleSheet, Button, FlatList, TouchableOpacity } from 'react-native';
+import  { ListNavigator } from "./ListNavigator";
 //import navigation from '/Users/seanrock/Downloads/DripOrDrown/App.js'
+
 
 //import vlothes from './src/screens/Closet';
 
-export default function Clothes({ name, type, weather }) {
-  return (
-    <View style={styles.list}>
-      <View style={styles.listingRatingContainer}></View>
-      <TouchableOpacity
-        style={styles.items}
-        onPress={() => navigation.navigate("Closet")}
-      >
-        <View style={styles.budgetTagsContainer}>
-          <Text style={styles.name}>{name}</Text>
-          <Text style={styles.type}>{type}</Text>
-          <Text style={styles.weather}>{weather}</Text>
+
+export default function Clothes ({ name, type, weather,   }) {
+  
+      return (
+      
+      <View style={styles.list}>
+        <View style={styles.listingRatingContainer}>
+          
+          
         </View>
-      </TouchableOpacity>
-    </View>
-  );
-}
+        <TouchableOpacity style={styles.items}
+        onPress={() => navigation.navigate('Closet')}>
+          <View style={styles.budgetTagsContainer}>
+            <Text style={styles.name}>{name}</Text>
+            <Text style={styles.type}>{type}</Text>
+            <Text style={styles.weather}>{weather}</Text> 
+          </View>
+        </TouchableOpacity>
+        
+      </View>
+    )
+    
+  }
 
 const styles = StyleSheet.create({
   list: {
