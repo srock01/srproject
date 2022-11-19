@@ -35,6 +35,8 @@ import Closet from './src/screens/Closet';
 import LoadIn from './src/screens/LoadIn';
 import LogIn from './src/screens/LogIn';
 import SignUp from './src/screens/SignUp';
+import Article from './src/screens/Article';
+
 
 const firebaseConfig = {
   apiKey: 'AIzaSyAF9QW9bvXKyWIiPpmaOgKunA51Jxe4iAw',
@@ -105,6 +107,7 @@ const App = () => {
             <Stack.Screen name="SignUp" component={SignUp} />
             <Stack.Screen name="HomeMenu" component={HomeMenu} />
             <Stack.Screen name="Closet" component={Closet} />
+            <Stack.Screen name="Article" component={Article} />
 
           </Stack.Navigator>
         </NavigationContainer>
