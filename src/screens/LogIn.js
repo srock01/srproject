@@ -73,7 +73,7 @@ export default function LogIn({ navigation }) {
           />
         </View>
 
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate("ForgotPassword")}>
           <Text style={styles.forgot_button}>Forgot Password?</Text>
         </TouchableOpacity>
 
@@ -127,7 +127,6 @@ const styles = StyleSheet.create({
     height: 50,
     flex: 1,
     padding: 10,
-    marginLeft: 20,
     textAlign: "center",
   },
 
