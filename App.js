@@ -98,13 +98,13 @@ const App = () => {
       <Stack.Navigator
         initialRouteName="loginOriginal"
         screenOptions={{
-          headerShown: false,
+          headerShown: true,
         }}
       >
-        <Stack.Screen name="LoadIn" component={LoadIn} />
-        <Stack.Screen name="LogIn" component={LogIn} />
-        <Stack.Screen name="SignUp" component={SignUp} />
-        <Stack.Screen name="HomeMenu" component={HomeMenu} />
+        <Stack.Screen name="Welcome" component={LoadIn} />
+        <Stack.Screen name="Login" component={LogIn} />
+        <Stack.Screen name="Register" component={SignUp} />
+        <Stack.Screen name="Home" component={HomeMenu} />
         <Stack.Screen name="Closet" component={Closet} />
         <Stack.Screen name="Article" component={Article} />
         <Stack.Screen name="ForgotPassword" component={ForgotPassword} />

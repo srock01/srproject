@@ -31,7 +31,7 @@ export default function LoadIn({ navigation }) {
 
       <TouchableOpacity
       style={styles.loginBtn}
-      onPress={() => navigation.navigate('LogIn')}>
+      onPress={() => navigation.navigate('Login')}>
         <Text style={styles.loginText}>LOGIN</Text>
 
       </TouchableOpacity>
@@ -39,7 +39,7 @@ export default function LoadIn({ navigation }) {
       <Text style={styles.loginOr}>OR</Text>
 
       <TouchableOpacity style={styles.loginBtn}
-      onPress={() => navigation.navigate('SignUp')}>
+      onPress={() => navigation.navigate('Register')}>
         <Text style={styles.registerText}>REGISTER</Text>
       </TouchableOpacity>
     </View>

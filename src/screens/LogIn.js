@@ -73,7 +73,7 @@ export default function LogIn({ navigation }) {
           />
         </View>
 
-        <TouchableOpacity onPress={() => navigation.navigate("ForgotPassword")}>
+        <TouchableOpacity onPress={() => navigation.navigate("Forgot Password")}>
           <Text style={styles.forgot_button}>Forgot Password?</Text>
         </TouchableOpacity>
 
@@ -93,7 +93,7 @@ async function loginPress(email, password, navigation) {
   if (user.exists()) {
     if (password === (await user.get("password"))) {
       //login to homepage
-      navigation.navigate("HomeMenu");
+      navigation.navigate("Home");
       console.log("Login Successful.");
     } else {
       //incorrect password
