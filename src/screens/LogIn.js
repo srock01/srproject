@@ -93,7 +93,7 @@ async function loginPress(email, password, navigation) {
   if (user.exists()) {
     if (password === (await user.get("password"))) {
       //login to homepage
-      navigation.navigate("Home");
+      navigation.navigate("Home", {email:email});
       console.log("Login Successful.");
     } else {
       //incorrect password

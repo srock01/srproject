@@ -1,24 +1,23 @@
 import React  from 'react';
 import { View, Text, StyleSheet, Image, Button, FlatList, TouchableOpacity } from 'react-native';
-export default function Article({route, navigation}) {
+export default function Article({route, navigation, navigation: { goBack }}) {
   
 
   const { name, type, weather } = route.params;
+  var str ='<';
   return (
+    
     <View style={{ flex: 1 }}>
-      <View style={styles.header}>
-        <Image style={styles.headerLogo} source={require("../../assets/logo2.jpeg")} />
+      <View style={styles.bruh}>
         
-        <Text style={styles.headerText}>DripOrDrown</Text>
-      </View>
-      <View style={[styles.bruh,{  flexDirection: 'row' }]}>
+        <Text style={[styles.title, {textAlign: 'center'}]}>{name} </Text>
         
-          <Text style={[styles.title, {paddingHorizontal:40}]}>{name} </Text>
-          
-      </View>
+    </View>
+      
+  
       <View style={{ flex: 1,paddingTop:15, paddingBottom: 80, height: 600}}>
-        <Text style={[styles.title, {paddingHorizontal:40}]}>Type: {type} </Text>
-        <Text style={[styles.title, {paddingHorizontal:40}]}>Weather: {weather} </Text>
+        <Text style={[styles.title2, {paddingHorizontal:40}]}>Type: {type} </Text>
+        <Text style={[styles.title2, {paddingHorizontal:40}]}>Weather: {weather} </Text>
       </View>
     </View>
   );
@@ -43,6 +42,15 @@ const styles = StyleSheet.create({
     marginRight: 10
   },
   title: {
+    display: 'flex',
+    justifyContent: 'right',
+    alignItems: 'right',
+    fontWeight: '300',
+    fontSize: 26,
+    marginVertical: 10,
+    color: 'white'
+  },
+  title2: {
     fontWeight: '300',
     fontSize: 26,
     marginVertical: 10,

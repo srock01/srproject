@@ -1,182 +1,78 @@
-import React,  { useState } from 'react';
-import {View, Text, StyleSheet, Image, FlatList, TouchableOpacity} from 'react-native';
-//import Clothes from '../component/Clothes';
-import  useNavigation  from '@react-navigation/native';
+import React,  { useState, useEffect } from 'react';
+import {View, Text, StyleSheet, Image, FlatList, TouchableOpacity, Button} from 'react-native';
 
-import {initializeApp} from 'firebase/app';
+
+import { initializeApp } from "firebase/app";
 import {
   getDocs,
   getFirestore,
   collection,
   firestore,
-} from 'firebase/firestore/lite';
+  firebase,
+  addDoc,
+  get,
+  doc,
+  getDoc,
+  limit,
+  query,
+  where,
+  setDoc,
+  getDocFromCache
+} from "firebase/firestore/lite";
 import { color } from 'react-native-reanimated';
+const firebaseConfig = {
+  apiKey: "AIzaSyAF9QW9bvXKyWIiPpmaOgKunA51Jxe4iAw",
+  authDomain: "dripordrown-90905.firebaseapp.com",
+  databaseURL: "https://dripordrown-90905-default-rtdb.firebaseio.com",
+  projectId: "dripordrown-90905",
+  storageBucket: "dripordrown-90905.appspot.com",
+  messagingSenderId: "217796469697",
+  appId: "1:217796469697:web:3324196fa615c8c4f6c540",
+  measurementId: "G-F0RSLNR2DY",
+};
+
+require("firebase/firestore");
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
 
-export default function Closet({navigation}) {
-  const [clothes, setClothes] = useState([
-    {
-      id: 1,
-      name: 'Blue Adidas Sweatshirt',
-      type: 'shirt',
-      weather: 'cool',
+export default function Closet({navigation,navigation: { goBack },route},) {
+  const [clothes, setClothes] = useState([]);
+  const { email } = route.params;
+  
+  const fetchBlogs=async()=>{
+    console.log(email);
+    const list = [];
+    if (email != null){
+      const querySnapshot = await getDocs(collection(db, "users", email, "clothes"));
+        
+
+      querySnapshot.forEach((doc) => {
+        list.push({ ...doc.data() })
+        // doc.data() is never undefined for query doc snapshots
+        console.log(doc.id, " => ", doc.data(),);
+        setClothes( list )
+      });
+    }
       
-    },
-    {
-      id: 2,
-      name: 'Black Adidas Trackpants',
-      type: 'pants',
-      weather: 'cool',
       
-    },
-    {
-      id: 3,
-      name: 'Adidas Shorts',
-      type: 'shorts',
-      weather: 'cool',
       
-    },
-    {
-      id: 4,
-      name: 'Blue Adidas Sneakers',
-      type: 'sneakers',
-      weather: 'any',
       
-    },
-    {
-      id: 5,
-      name: 'Red Sweater',
-      type: 'shirt',
-      weather: 'cool',
+
+    
+
+  
+};
       
-    },
-    {
-      id: 6,
-      name: 'Green Tee Shirt',
-      type: 'shirt',
-      weather: 'warm',
-    },
-    {
-      
-      id: 7,
-      name: 'Blue Adidas Sweatshirt',
-      type: 'shirt',
-      weather: 'cool',
-      
-    },
-    {
-      id: 8,
-      name: 'Black Adidas Trackpants',
-      type: 'pants',
-      weather: 'cool',
-      
-    },
-    {
-      id: 9,
-      name: 'Adidas Shorts',
-      type: 'shorts',
-      weather: 'cool',
-      
-    },
-    {
-      id: 10,
-      name: 'Blue Adidas Sneakers',
-      type: 'sneakers',
-      weather: 'any',
-      
-    },
-    {
-      id: 11,
-      name: 'Red Sweater',
-      type: 'shirt',
-      weather: 'cool',
-      
-    },
-    {
-      id: 12,
-      name: 'Green Tee Shirt',
-      type: 'shirt',
-      weather: 'warm',
-      
-    },
-    {
-      id: 13,
-      name: 'Adidas Shorts',
-      type: 'shorts',
-      weather: 'cool',
-      
-    },
-    {
-      id: 14,
-      name: 'Blue Adidas Sneakers',
-      type: 'sneakers',
-      weather: 'any',
-      
-    },
-    {
-      id: 15,
-      name: 'Red Sweater',
-      type: 'shirt',
-      weather: 'cool',
-      
-    },
-    {
-      id: 16,
-      name: 'Green Tee Shirt',
-      type: 'shirt',
-      weather: 'warm',
-    },
-    {
-      
-      id: 17,
-      name: 'Blue Adidas Sweatshirt',
-      type: 'shirt',
-      weather: 'cool',
-      
-    },
-    {
-      id: 18,
-      name: 'Black Adidas Trackpants',
-      type: 'pants',
-      weather: 'cool',
-      
-    },
-    {
-      id: 19,
-      name: 'Adidas Shorts',
-      type: 'shorts',
-      weather: 'cool',
-      
-    },
-    {
-      id: 20,
-      name: 'Blue Adidas Sneakers',
-      type: 'sneakers',
-      weather: 'any',
-      
-    },
-    {
-      id: 21,
-      name: 'Red Sweater',
-      type: 'shirt',
-      weather: 'cool',
-      
-    },
-    {
-      id: 22,
-      name: 'Green Tee Shirt',
-      type: 'shirt',
-      weather: 'warm',
-      
-    },
-  ]);
+    
+useEffect(() => {
+  fetchBlogs();
+ }, [])
+  var str= "<"
   return (
     <View style={{ flex: 1 }}>
-      <View style={styles.header}>
-        <Image style={styles.headerLogo} source={require("../../assets/logo2.jpeg")} />
-        
-        <Text style={styles.headerText}>DripOrDrown</Text>
-      </View>
+       
       <View style={[styles.bruh,{  flexDirection: 'row' }]}>
         
           <Text style={[styles.title, {paddingHorizontal:40}]}>Name </Text>
@@ -186,10 +82,11 @@ export default function Closet({navigation}) {
       <View style={{ flex: 1,paddingTop:15, paddingBottom: 80, height: 600}}>
         <FlatList 
           data={clothes}
+       //   keyExtractor={item => item.id}
           renderItem={({item}) => (
               <View style={styles.list}>
                 <TouchableOpacity style={styles.items}
-                onPress={() => navigation.navigate('Article', { name: item.name , type:item.type,weather:item.weather})}>
+                onPress={() => navigation.navigate('Article', { name: item.name, type:item.type,weather:item.weather})}>
                   <View style={styles.budgetTagsContainer}>
                     <Text style={styles.name}>{item.name}</Text>
                     <Text style={styles.type}>{item.type}</Text>
@@ -200,14 +97,49 @@ export default function Closet({navigation}) {
               </View>)}
           
         />
+        
       </View>
+      <View style={styles.button}>
+      <TouchableOpacity style={styles.buttonTO}
+                onPress={() => navigation.navigate('Article', { email: email})}>
+                <View>
+                <Text style={styles.buttonTxt}>ADD ARTICLE</Text>
+                </View>
+
+       </TouchableOpacity>
+
+      </View>
+      
+      
     </View>
   );
 };
 
+
 const styles = StyleSheet.create({
   bruh: {
     backgroundColor: 'blue',
+  },
+  button: {
+    flex: 1,
+    right:25,
+    margin:5,
+    bottom:0,
+    position:'absolute',
+    
+    
+  },
+  buttonTO: {
+    borderColor: 'black',
+    borderRadius: 50,
+    backgroundColor :'red',
+    
+
+  },
+  buttonTxt: {
+    fontSize: 50,
+    margin: 5,
+    alignSelf: 'center',
   },
   header: {
     display: 'flex',
@@ -249,7 +181,8 @@ const styles = StyleSheet.create({
   headerText: {
     fontSize: 28,
     fontWeight: '600',
-    color: 'blue'
+    color: 'blue',
+    paddingRight: 70
   },
   list: {
     width: '100%',
