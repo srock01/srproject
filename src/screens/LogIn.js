@@ -1,27 +1,13 @@
 import React, { useState } from "react";
-import { Node } from "react";
 import { initializeApp } from "firebase/app";
+import { getFirestore, getDoc, doc } from "firebase/firestore/lite";
 import {
-  getDocs,
-  getFirestore,
-  collection,
-  firestore,
-  query,
-  getDoc,
-  setDoc,
-  doc,
-} from "firebase/firestore/lite";
-import {
-  SafeAreaView,
-  ScrollView,
   StatusBar,
   StyleSheet,
   TextInput,
   Text,
   Image,
-  useColorScheme,
   View,
-  Button,
   TouchableOpacity,
 } from "react-native";
 const firebaseConfig = {
@@ -59,7 +45,7 @@ export default function LogIn({ navigation }) {
             placeholder="Email"
             placeholderTextColor="#003f5c"
             keyboardType="email-address"
-            onChangeText={(email) => setEmail(email)}
+            onChangeText={(email) => setEmail(email.toLowerCase())}
           />
         </View>
 
@@ -73,7 +59,9 @@ export default function LogIn({ navigation }) {
           />
         </View>
 
-        <TouchableOpacity onPress={() => navigation.navigate("Forgot Password")}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("Forgot Password")}
+        >
           <Text style={styles.forgot_button}>Forgot Password?</Text>
         </TouchableOpacity>
 
@@ -93,7 +81,7 @@ async function loginPress(email, password, navigation) {
   if (user.exists()) {
     if (password === (await user.get("password"))) {
       //login to homepage
-      navigation.navigate("Home", {email:email});
+      navigation.navigate("Home", { email: email });
       console.log("Login Successful.");
     } else {
       //incorrect password
@@ -111,7 +99,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 5,
-    borderColor: "white",
+    borderColor: "#1C4BA5",
   },
 
   inputView: {
@@ -161,5 +149,6 @@ const styles = StyleSheet.create({
     width: 300,
     height: 300,
     marginBottom: 50,
+    borderRadius: 25,
   },
 });

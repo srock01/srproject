@@ -1,26 +1,13 @@
 import React, { useState } from "react";
 import { initializeApp } from "firebase/app";
+import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore/lite";
 import {
-  getDocs,
-  getFirestore,
-  collection,
-  firestore,
-  addDoc,
-  doc,
-  getDoc,
-  setDoc,
-} from "firebase/firestore/lite";
-import {
-  SafeAreaView,
-  ScrollView,
   StatusBar,
   StyleSheet,
   Text,
   TextInput,
   Image,
-  useColorScheme,
   View,
-  Button,
   TouchableOpacity,
 } from "react-native";
 const firebaseConfig = {
@@ -57,7 +44,7 @@ export default function SignUp() {
             style={styles.TextInput}
             placeholder="Email"
             placeholderTextColor="#003f5c"
-            onChangeText={(email) => setEmail(email)}
+            onChangeText={(email) => setEmail(email.toLowerCase())}
           />
         </View>
 
@@ -153,5 +140,6 @@ const styles = StyleSheet.create({
     width: 300,
     height: 300,
     marginBottom: 50,
+    borderRadius: 25,
   },
 });

@@ -1,30 +1,10 @@
-import React, { useState } from "react";
-import { Node } from "react";
+import React from "react";
 import { initializeApp } from "firebase/app";
-import {
-  getDocs,
-  getFirestore,
-  collection,
-  firestore,
-} from "firebase/firestore/lite";
+import { getFirestore } from "firebase/firestore/lite";
 //import {firebase, db} from './firebase/firebase';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from "react-native";
+import { StyleSheet, Text, useColorScheme, View } from "react-native";
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from "react-native/Libraries/NewAppScreen";
+import { Colors } from "react-native/Libraries/NewAppScreen";
 
 //import Clothes from "./src/component/Clothes";
 import { NavigationContainer } from "@react-navigation/native";
@@ -101,7 +81,11 @@ const App = () => {
           headerShown: true,
         }}
       >
-        <Stack.Screen name="Welcome" component={LoadIn} />
+        <Stack.Screen
+          name="Welcome"
+          component={LoadIn}
+          options={{ headerShown: false }}
+        />
         <Stack.Screen name="Login" component={LogIn} />
         <Stack.Screen name="Register" component={SignUp} />
         <Stack.Screen name="Home" component={HomeMenu} />
