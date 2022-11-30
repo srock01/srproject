@@ -49,7 +49,10 @@ export default function Closet({navigation,navigation: { goBack },route},) {
         
 
       querySnapshot.forEach((doc) => {
-        list.push({ ...doc.data() })
+        let myData = doc.data() 
+        myData.id = doc.id 
+        myData.e = email
+        list.push({ ...myData })
         // doc.data() is never undefined for query doc snapshots
         console.log(doc.id, " => ", doc.data(),);
         setClothes( list )
@@ -86,7 +89,7 @@ useEffect(() => {
           renderItem={({item}) => (
               <View style={styles.list}>
                 <TouchableOpacity style={styles.items}
-                onPress={() => navigation.navigate('Article', { name: item.name, type:item.type,weather:item.weather})}>
+                onPress={() => navigation.navigate('Article', { name: item.name, type:item.type,weather:item.weather, id:item.id, e:item.e})}>
                   <View style={styles.budgetTagsContainer}>
                     <Text style={styles.name}>{item.name}</Text>
                     <Text style={styles.type}>{item.type}</Text>
