@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
   },
   button: {
     flex: 1,
-    right:25,
+    right:50,
     margin:5,
     bottom:0,
     position:'absolute',
