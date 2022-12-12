@@ -17,19 +17,18 @@ import LogIn from "./src/screens/LogIn";
 import SignUp from "./src/screens/SignUp";
 import Article from "./src/screens/Article";
 import ForgotPassword from "./src/screens/ForgotPassword";
-import Calendar from "./src/screens/Calendar";
-import Calendar1 from "./src/screens/Calendar";
+import CalendarScreen from "./src/screens/Calendar";
 import AddArticle from "./src/screens/AddArticle";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAF9QW9bvXKyWIiPpmaOgKunA51Jxe4iAw",
-  authDomain: "dripordrown-90905.firebaseapp.com",
-  databaseURL: "https://dripordrown-90905-default-rtdb.firebaseio.com",
-  projectId: "dripordrown-90905",
-  storageBucket: "dripordrown-90905.appspot.com",
-  messagingSenderId: "217796469697",
-  appId: "1:217796469697:web:3324196fa615c8c4f6c540",
-  measurementId: "G-F0RSLNR2DY",
+    apiKey: "AIzaSyAF9QW9bvXKyWIiPpmaOgKunA51Jxe4iAw",
+    authDomain: "dripordrown-90905.firebaseapp.com",
+    databaseURL: "https://dripordrown-90905-default-rtdb.firebaseio.com",
+    projectId: "dripordrown-90905",
+    storageBucket: "dripordrown-90905.appspot.com",
+    messagingSenderId: "217796469697",
+    appId: "1:217796469697:web:3324196fa615c8c4f6c540",
+    measurementId: "G-F0RSLNR2DY",
 };
 
 const fbApp = initializeApp(firebaseConfig);
@@ -39,66 +38,70 @@ const Stack = createStackNavigator();
 /* $FlowFixMe[missing-local-annot] The type annotation(s) required by Flow's
  * LTI update could not be added via codemod */
 const Section = ({ children, title }) => {
-  const isDarkMode = useColorScheme() === "dark";
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}
-      >
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}
-      >
-        {children}
-      </Text>
-    </View>
-  );
+    const isDarkMode = useColorScheme() === "dark";
+    return (
+        <View style={styles.sectionContainer}>
+            <Text
+                style={[
+                    styles.sectionTitle,
+                    {
+                        color: isDarkMode ? Colors.white : Colors.black,
+                    },
+                ]}
+            >
+                {title}
+            </Text>
+            <Text
+                style={[
+                    styles.sectionDescription,
+                    {
+                        color: isDarkMode ? Colors.light : Colors.dark,
+                    },
+                ]}
+            >
+                {children}
+            </Text>
+        </View>
+    );
 };
 
 const App = () => {
-  const isDarkMode = useColorScheme() === "dark";
+    const isDarkMode = useColorScheme() === "dark";
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
+    const backgroundStyle = {
+        backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+    };
 
-  const [checking, setIsChecking] = React.useState(true);
-  //console.log(users);
+    const [checking, setIsChecking] = React.useState(true);
+    //console.log(users);
 
-  return (
-    <NavigationContainer>
-      <Stack.Navigator
-        initialRouteName="loginOriginal"
-        screenOptions={{
-          headerShown: true,
-        }}
-      >
-        <Stack.Screen
-          name="Welcome"
-          component={LoadIn}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen name="Login" component={LogIn} />
-        <Stack.Screen name="Register" component={SignUp} />
-        <Stack.Screen name="Home" component={HomeMenu} />
-        <Stack.Screen name="Closet" component={Closet} />
-        <Stack.Screen name="Article" component={Article} />
-        <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
-        <Stack.Screen name="AddArticle" component={AddArticle} />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
+    return (
+        <NavigationContainer>
+            <Stack.Navigator
+                initialRouteName="loginOriginal"
+                screenOptions={{
+                    headerShown: true,
+                }}
+            >
+                <Stack.Screen
+                    name="Welcome"
+                    component={LoadIn}
+                    options={{ headerShown: false }}
+                />
+                <Stack.Screen name="Login" component={LogIn} />
+                <Stack.Screen name="Register" component={SignUp} />
+                <Stack.Screen name="Home" component={HomeMenu} />
+                <Stack.Screen name="Closet" component={Closet} />
+                <Stack.Screen name="Article" component={Article} />
+                <Stack.Screen
+                    name="ForgotPassword"
+                    component={ForgotPassword}
+                />
+                <Stack.Screen name="AddArticle" component={AddArticle} />
+                <Stack.Screen name="Calendar" component={CalendarScreen} />
+            </Stack.Navigator>
+        </NavigationContainer>
+    );
 };
 /*isSignedIn ? (
   <Stack.Screen name="Calendar" component={Calendar1} />
@@ -115,22 +118,22 @@ const App = () => {
         );*/
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: "600",
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: "400",
-  },
-  highlight: {
-    fontWeight: "700",
-  },
+    sectionContainer: {
+        marginTop: 32,
+        paddingHorizontal: 24,
+    },
+    sectionTitle: {
+        fontSize: 24,
+        fontWeight: "600",
+    },
+    sectionDescription: {
+        marginTop: 8,
+        fontSize: 18,
+        fontWeight: "400",
+    },
+    highlight: {
+        fontWeight: "700",
+    },
 });
 
 export default App;
