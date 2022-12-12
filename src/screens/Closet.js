@@ -74,11 +74,9 @@ export default function Closet({ navigation, navigation: { goBack }, route }) {
     return (
         <View style={{ flex: 1 }}>
             <View style={[styles.bruh, { flexDirection: "row" }]}>
-                <Text style={[styles.title, { paddingHorizontal: 40 }]}>
-                    Name{" "}
-                </Text>
-                <Text style={styles.titleType}>Type </Text>
-                <Text style={styles.titleWeather}>Weather </Text>
+                <Text style={styles.titleType}> Name </Text>
+                <Text style={styles.titleType}> Type </Text>
+                <Text style={styles.titleWeather}> Weather </Text>
             </View>
             <View
                 style={{
@@ -136,6 +134,7 @@ export default function Closet({ navigation, navigation: { goBack }, route }) {
 const styles = StyleSheet.create({
     bruh: {
         backgroundColor: "blue",
+        justifyContent: "space-between"
     },
     button: {
         flex: 1,
