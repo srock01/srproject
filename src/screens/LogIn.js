@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { initializeApp } from "firebase/app";
 import { getFirestore, getDoc, doc } from "firebase/firestore/lite";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import {
     StatusBar,
     StyleSheet,
@@ -32,46 +33,52 @@ export default function LogIn({ navigation }) {
     const [password, setPassword] = useState("");
     return (
         <>
-            <View style={styles.container}>
-                <StatusBar style="auto" />
+            <KeyboardAwareScrollView>
+                <View style={styles.container}>
+                    <StatusBar style="auto" />
 
-                <Image
-                    style={styles.image}
-                    source={require("../../assets/logo2.jpeg")}
-                />
-
-                <View style={styles.inputView}>
-                    <TextInput
-                        style={styles.TextInput}
-                        placeholder="Email"
-                        placeholderTextColor="#003f5c"
-                        keyboardType="email-address"
-                        onChangeText={(email) => setEmail(email.toLowerCase())}
+                    <Image
+                        style={styles.image}
+                        source={require("../../assets/logo2.jpeg")}
                     />
-                </View>
 
-                <View style={styles.inputView}>
-                    <TextInput
-                        style={styles.TextInput}
-                        placeholder="Password"
-                        placeholderTextColor="#003f5c"
-                        secureTextEntry={true}
-                        onChangeText={(password) => setPassword(password)}
-                    />
-                </View>
-                <TouchableOpacity
-                    onPress={() => navigation.navigate("Forgot Password")}
-                >
-                    <Text style={styles.forgot_button}>Forgot Password?</Text>
-                </TouchableOpacity>
+                    <View style={styles.inputView}>
+                        <TextInput
+                            style={styles.TextInput}
+                            placeholder="Email"
+                            placeholderTextColor="#003f5c"
+                            keyboardType="email-address"
+                            onChangeText={(email) =>
+                                setEmail(email.toLowerCase())
+                            }
+                        />
+                    </View>
 
-                <TouchableOpacity
-                    style={styles.loginBtn}
-                    onPress={() => loginPress(email, password, navigation)}
-                >
-                    <Text style={styles.registerText}>LOGIN</Text>
-                </TouchableOpacity>
-            </View>
+                    <View style={styles.inputView}>
+                        <TextInput
+                            style={styles.TextInput}
+                            placeholder="Password"
+                            placeholderTextColor="#003f5c"
+                            secureTextEntry={true}
+                            onChangeText={(password) => setPassword(password)}
+                        />
+                    </View>
+                    <TouchableOpacity
+                        onPress={() => navigation.navigate("Forgot Password")}
+                    >
+                        <Text style={styles.forgot_button}>
+                            Forgot Password?
+                        </Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                        style={styles.loginBtn}
+                        onPress={() => loginPress(email, password, navigation)}
+                    >
+                        <Text style={styles.registerText}>LOGIN</Text>
+                    </TouchableOpacity>
+                </View>
+            </KeyboardAwareScrollView>
         </>
     );
 }
