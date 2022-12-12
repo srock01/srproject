@@ -85,7 +85,6 @@ export default function Closet({ navigation, navigation: { goBack }, route }) {
                     flex: 1,
                     paddingTop: 15,
                     paddingBottom: 80,
-                    height: 600,
                 }}
             >
                 <FlatList
@@ -121,7 +120,7 @@ export default function Closet({ navigation, navigation: { goBack }, route }) {
                 <TouchableOpacity
                     style={styles.buttonTO}
                     onPress={() =>
-                        navigation.navigate("Article", { email: email })
+                        navigation.navigate("AddArticle", { email: email })
                     }
                 >
                     <View>
@@ -139,11 +138,10 @@ const styles = StyleSheet.create({
     },
     button: {
         flex: 1,
-        margin: 0,
-        bottom: 0,
-        alignItems: "center",
-        justifyContent: "flex-end",
-        marginBottom: 20,
+        right:85,
+        margin:5,
+        bottom:10,
+        position:'absolute',
     },
     buttonTO: {
         borderColor: "black",

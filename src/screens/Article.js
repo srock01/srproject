@@ -39,9 +39,7 @@ export default function Article({route, navigation, navigation: { goBack }}) {
 
   const { name, type, weather, id , e} = route.params;
   const [clothes, setClothes] = useState({});
-  let bruh;
-  console.log(id);
-  console.log(e);
+  
   const fetchBlogs=async()=>{
     const myDoc = doc(db, "users", e, "clothes", id)
     const user = await getDoc(myDoc);
@@ -51,16 +49,7 @@ export default function Article({route, navigation, navigation: { goBack }}) {
       setClothes(user.data())
       
     }
-   
-    
-      
-      
-
-    
-
-  
-};
-      
+};    
     
 useEffect(() => {
   fetchBlogs();
@@ -79,6 +68,8 @@ useEffect(() => {
       <View style={{ flex: 1,paddingTop:15, paddingBottom: 80, height: 600}}>
         <Text style={[styles.title2, {paddingHorizontal:40}]}>Type: {clothes.type} </Text>
         <Text style={[styles.title2, {paddingHorizontal:40}]}>Weather: {clothes.weather} </Text>
+        <Text style={[styles.title2, {paddingHorizontal:40}]}>Size: {clothes.size} </Text>
+        <Image source={{ uri: clothes.url }} style={{ width: 200, height: 200 }} />
       </View>
     </View>
   );

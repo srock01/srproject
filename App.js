@@ -17,6 +17,9 @@ import LogIn from "./src/screens/LogIn";
 import SignUp from "./src/screens/SignUp";
 import Article from "./src/screens/Article";
 import ForgotPassword from "./src/screens/ForgotPassword";
+import Calendar from "./src/screens/Calendar";
+import Calendar1 from "./src/screens/Calendar";
+import AddArticle from "./src/screens/AddArticle";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAF9QW9bvXKyWIiPpmaOgKunA51Jxe4iAw",
@@ -92,11 +95,13 @@ const App = () => {
         <Stack.Screen name="Closet" component={Closet} />
         <Stack.Screen name="Article" component={Article} />
         <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
+        <Stack.Screen name="AddArticle" component={AddArticle} />
       </Stack.Navigator>
     </NavigationContainer>
   );
 };
 /*isSignedIn ? (
+  <Stack.Screen name="Calendar" component={Calendar1} />
           <>
             <Stack.Screen name="HomeMenu" component={HomeMenu} />
             <Stack.Screen name="Closet" component={Closet} />
