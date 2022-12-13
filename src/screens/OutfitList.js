@@ -143,12 +143,13 @@ const styles = StyleSheet.create({
         // position:'absolute',
         flex: 'center',
         alignItems: 'center',
+        
     },
     buttonTO: {
         borderColor: "black",
         borderRadius: 50,
         backgroundColor: "#1C4BA5",
-        marginRight: 45,
+        marginRight: 5,
         bottom: 40,
     },
     buttonTxt: {

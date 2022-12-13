@@ -151,7 +151,7 @@ const styles = StyleSheet.create({
         borderColor: "black",
         borderRadius: 50,
         backgroundColor: "#1C4BA5",
-        marginRight: 25,
+        marginRight: 10,
         bottom: 40,
     },
     buttonTxt: {
