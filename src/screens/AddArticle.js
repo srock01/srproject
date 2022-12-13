@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { initializeApp } from "firebase/app";
 import * as ImagePicker from 'expo-image-picker';
 
-import { getFirestore, doc, getDoc, setDoc, addDoc } from "firebase/firestore/lite";
+import { getFirestore, doc, getDoc, setDoc, addDoc, updateDoc } from "firebase/firestore/lite";
 global.Buffer = global.Buffer || require('buffer').Buffer
 import {
   StatusBar,
@@ -39,7 +39,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const storage = getStorage(app);
 
-export default function AddArticle({route, navigation: { goBack }}) {
+export default function AddArticle({route, navigation}) {
   //var [ isPress, setIsPress ] = React.useState(false);
   const { email } = route.params;
   const [name, setName] = useState("");
@@ -215,6 +215,7 @@ export default function AddArticle({route, navigation: { goBack }}) {
         await setDoc(doc(db, "users", email, "clothes", name), 
         { name:name,type:type,weather: weather, size: size, url: url });
         console.log("clothing article added");
+        navigation.navigate("Closet", { email: email })
       } 
     } catch (e) {
       console.error("Error adding document: ", e);
@@ -222,6 +223,11 @@ export default function AddArticle({route, navigation: { goBack }}) {
   }
   const [image, setImage] = useState(null);
   async function  pickImage ()  {
+    let mom;
+    let user1 = await getDoc(doc(db, "users", email));
+      if (user1.exists()) {
+        mom =user1.get("total");
+      } 
     let result
     // No permissions request is necessary for launching the image library
     result = await ImagePicker.launchImageLibraryAsync({
@@ -238,8 +244,11 @@ export default function AddArticle({route, navigation: { goBack }}) {
       setUrl(result.assets[0].uri)
     }
     var inputPath = {uri: result.assets[0].uri};
-    
-    const reference = ref(storage, 'image/${uniqueId}');
+    let user = doc(db, "users", email);
+    const reference = ref(storage, 'image/'+email+mom);
+    await updateDoc(user, {
+      total: mom+1
+    });
 
     const img = await fetch(result.assets[0].uri);
     const bytes = await img.blob();

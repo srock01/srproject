@@ -33,42 +33,42 @@ export default function SignUp() {
     return (
         <>
             <KeyboardAwareScrollView>
-                <View style={styles.container}>
-                    <StatusBar style="auto" />
+            <View style={styles.container}>
+                <StatusBar style="auto" />
 
-                    <Image
-                        style={styles.image}
-                        source={require("../../assets/logo2.jpeg")}
-                    />
+                <Image
+                    style={styles.image}
+                    source={require("../../assets/logo2.jpeg")}
+                />
 
-                    <View style={styles.inputView}>
-                        <TextInput
-                            style={styles.TextInput}
-                            placeholder="Email"
-                            placeholderTextColor="#003f5c"
+                <View style={styles.inputView}>
+                    <TextInput
+                        style={styles.TextInput}
+                        placeholder="Email"
+                        placeholderTextColor="#003f5c"
                             onChangeText={(email) =>
                                 setEmail(email.toLowerCase())
                             }
-                        />
-                    </View>
-
-                    <View style={styles.inputView}>
-                        <TextInput
-                            style={styles.TextInput}
-                            placeholder="Password"
-                            placeholderTextColor="#003f5c"
-                            secureTextEntry={true}
-                            onChangeText={(password) => setPassword(password)}
-                        />
-                    </View>
-
-                    <TouchableOpacity
-                        style={styles.loginBtn}
-                        onPress={() => registerPress(email, password)}
-                    >
-                        <Text style={styles.registerText}>REGISTER</Text>
-                    </TouchableOpacity>
+                    />
                 </View>
+
+                <View style={styles.inputView}>
+                    <TextInput
+                        style={styles.TextInput}
+                        placeholder="Password"
+                        placeholderTextColor="#003f5c"
+                        secureTextEntry={true}
+                        onChangeText={(password) => setPassword(password)}
+                    />
+                </View>
+
+                <TouchableOpacity
+                    style={styles.loginBtn}
+                    onPress={() => registerPress(email, password)}
+                >
+                    <Text style={styles.registerText}>REGISTER</Text>
+                </TouchableOpacity>
+            </View>
             </KeyboardAwareScrollView>
         </>
     );
@@ -88,7 +88,7 @@ async function registerPress(email, password) {
             ]);
             console.log("Creation Failed. User already exists");
         } else {
-            await setDoc(doc(db, "users", email), { password: password });
+            await setDoc(doc(db, "users", email), { password: password, total:0 });
             console.log("Account Created.");
         }
     } catch (e) {
