@@ -33,42 +33,42 @@ export default function SignUp() {
     return (
         <>
             <KeyboardAwareScrollView>
-            <View style={styles.container}>
-                <StatusBar style="auto" />
+                <View style={styles.container}>
+                    <StatusBar style="auto" />
 
-                <Image
-                    style={styles.image}
-                    source={require("../../assets/logo2.jpeg")}
-                />
+                    <Image
+                        style={styles.image}
+                        source={require("../../assets/logo2.jpeg")}
+                    />
 
-                <View style={styles.inputView}>
-                    <TextInput
-                        style={styles.TextInput}
-                        placeholder="Email"
-                        placeholderTextColor="#003f5c"
+                    <View style={styles.inputView}>
+                        <TextInput
+                            style={styles.TextInput}
+                            placeholder="Email"
+                            placeholderTextColor="#003f5c"
                             onChangeText={(email) =>
                                 setEmail(email.toLowerCase())
                             }
-                    />
-                </View>
+                        />
+                    </View>
 
-                <View style={styles.inputView}>
-                    <TextInput
-                        style={styles.TextInput}
-                        placeholder="Password"
-                        placeholderTextColor="#003f5c"
-                        secureTextEntry={true}
-                        onChangeText={(password) => setPassword(password)}
-                    />
-                </View>
+                    <View style={styles.inputView}>
+                        <TextInput
+                            style={styles.TextInput}
+                            placeholder="Password"
+                            placeholderTextColor="#003f5c"
+                            secureTextEntry={true}
+                            onChangeText={(password) => setPassword(password)}
+                        />
+                    </View>
 
-                <TouchableOpacity
-                    style={styles.loginBtn}
-                    onPress={() => registerPress(email, password)}
-                >
-                    <Text style={styles.registerText}>REGISTER</Text>
-                </TouchableOpacity>
-            </View>
+                    <TouchableOpacity
+                        style={styles.loginBtn}
+                        onPress={() => registerPress(email, password)}
+                    >
+                        <Text style={styles.registerText}>REGISTER</Text>
+                    </TouchableOpacity>
+                </View>
             </KeyboardAwareScrollView>
         </>
     );
@@ -88,7 +88,10 @@ async function registerPress(email, password) {
             ]);
             console.log("Creation Failed. User already exists");
         } else {
-            await setDoc(doc(db, "users", email), { password: password, total:0 });
+            await setDoc(doc(db, "users", email), {
+                password: password,
+                total: 0,
+            });
             console.log("Account Created.");
         }
     } catch (e) {
@@ -102,8 +105,10 @@ const styles = StyleSheet.create({
         backgroundColor: "#1C4BA5",
         alignItems: "center",
         justifyContent: "center",
-        borderRadius: 5,
-        borderColor: "white",
+        borderRadius: 0,
+        borderColor: "#1C4BA5",
+        paddingBottom: "17%",
+        height: height,
     },
 
     inputView: {
@@ -119,7 +124,7 @@ const styles = StyleSheet.create({
         height: 50,
         flex: 1,
         padding: 10,
-        marginLeft: 20,
+        textAlign: "center",
     },
 
     forgot_button: {
@@ -141,13 +146,8 @@ const styles = StyleSheet.create({
         height: 50,
         alignItems: "center",
         justifyContent: "center",
-        marginTop: 20,
         backgroundColor: "white",
-    },
-    loginOr: {
-        paddingTop: 20,
-        color: "white",
-        fontSize: 15,
+        marginTop: 45,
     },
     image: {
         width: 300,

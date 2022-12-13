@@ -121,8 +121,10 @@ const styles = StyleSheet.create({
         backgroundColor: "#1C4BA5",
         alignItems: "center",
         justifyContent: "center",
-        borderRadius: 5,
+        borderRadius: 0,
         borderColor: "#1C4BA5",
+        paddingBottom: "20%",
+        height: height,
     },
 
     inputView: {
@@ -160,13 +162,7 @@ const styles = StyleSheet.create({
         height: 50,
         alignItems: "center",
         justifyContent: "center",
-        marginTop: 20,
         backgroundColor: "white",
-    },
-    loginOr: {
-        paddingTop: 20,
-        color: "white",
-        fontSize: 15,
     },
     image: {
         width: 300,
