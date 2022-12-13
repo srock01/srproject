@@ -137,10 +137,12 @@ const styles = StyleSheet.create({
     },
     button: {
         flex: 1,
-        right:85,
-        margin:5,
-        bottom:10,
-        position:'absolute',
+        // right:85,
+        // margin:5,
+        // bottom:10,
+        // position:'absolute',
+        flex: 'center',
+        alignItems: 'center',
     },
     buttonTO: {
         borderColor: "black",
