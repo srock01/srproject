@@ -241,7 +241,6 @@ export default function AddArticle({route, navigation}) {
     
     if (!result.canceled) {
       setImage(result.assets[0].uri);
-      setUrl(result.assets[0].uri)
     }
     var inputPath = {uri: result.assets[0].uri};
     let user = doc(db, "users", email);
@@ -258,6 +257,7 @@ export default function AddArticle({route, navigation}) {
       .then((url) => {
         console.log(url);
         console.log("test");
+        setUrl(url)
       })
   }
   return (
