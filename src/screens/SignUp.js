@@ -9,6 +9,7 @@ import {
     Image,
     View,
     TouchableOpacity,
+    Dimensions,
 } from "react-native";
 const firebaseConfig = {
     apiKey: "AIzaSyAF9QW9bvXKyWIiPpmaOgKunA51Jxe4iAw",
@@ -26,6 +27,7 @@ require("firebase/firestore");
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const { height } = Dimensions.get("window");
 
 export default function SignUp() {
     const [email, setEmail] = useState("");

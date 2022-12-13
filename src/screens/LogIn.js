@@ -11,6 +11,7 @@ import {
     View,
     TouchableOpacity,
     Alert,
+    Dimensions,
 } from "react-native";
 const firebaseConfig = {
     apiKey: "AIzaSyAF9QW9bvXKyWIiPpmaOgKunA51Jxe4iAw",
@@ -22,6 +23,9 @@ const firebaseConfig = {
     appId: "1:217796469697:web:3324196fa615c8c4f6c540",
     measurementId: "G-F0RSLNR2DY",
 };
+
+
+const {height} = Dimensions.get("window");
 
 require("firebase/firestore");
 
