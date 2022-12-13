@@ -13,7 +13,9 @@ import {
   View,
   TouchableOpacity,
   Button,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
+  Alert,
+
 } from "react-native";
 import { 
   getStorage, 
@@ -245,20 +247,47 @@ export default function AddArticle({route, navigation}) {
     var inputPath = {uri: result.assets[0].uri};
     let user = doc(db, "users", email);
     const reference = ref(storage, 'image/'+email+mom);
-    await updateDoc(user, {
-      total: mom+1
-    });
-
-    const img = await fetch(result.assets[0].uri);
-    const bytes = await img.blob();
-    uploadBytes(reference, bytes);
     
-    getDownloadURL(ref(storage, 'image.jpg'))
-      .then((url) => {
-        console.log(url);
-        console.log("test");
-        setUrl(url)
-      })
+    try{
+      const img = await fetch(result.assets[0].uri);
+      const bytes = await img.blob();
+      uploadBytes(reference, bytes);
+    }catch{
+      console.error("Error adding document: ", e);
+    }
+
+      await getDownloadURL(ref(storage, reference))
+        .then((url) => {
+            
+            console.log(url);
+            console.log("test");
+            setUrl(url)
+        })
+        .catch((error) => {
+          // A full list of error codes is available at
+          // https://firebase.google.com/docs/storage/web/handle-errors
+          switch (error.code) {
+            case 'storage/object-not-found':
+              // File doesn't exist
+              break;
+            case 'storage/unauthorized':
+              // User doesn't have permission to access the object
+              break;
+            case 'storage/canceled':
+              // User canceled the upload
+              break;
+      
+            // ...
+      
+            case 'storage/unknown':
+              // Unknown error occurred, inspect the server response
+              break;
+          }
+        });
+        await updateDoc(user, {
+          total: mom+1
+        });
+      
   }
   return (
     <>
