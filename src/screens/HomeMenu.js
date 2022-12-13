@@ -46,18 +46,10 @@ export default function Home ({navigation, route}) {
         <Pressable style={styles.Button} onPress={() => navigation.navigate('OutfitList',{ email: email })}>
           <Text style={styles.text}>Outfits</Text>
         </Pressable>
-
-        {/* <Button
-          style={styles.Button}
-          title="Closet"
-          color="white"
-          onPress={() => navigation.navigate('Closet',{ email: email })}
-        />
-        <Button
-          title="Outfits"
-          color="white"
-          onPress={() => navigation.navigate('OutfitList',{ email: email })}
-        /> */}
+        <Pressable style={styles.Button} onPress={() => navigation.navigate('Calendar')}>
+          <Text style={styles.text}>Calendar</Text>
+        </Pressable>
+        
       </View>
     );
   }
@@ -78,7 +70,7 @@ export default function Home ({navigation, route}) {
       paddingHorizontal: 28,
       borderRadius: 6,
       backgroundColor: 'black',
-      width: 120,
+      width: 150,
     },
     text: {
       alignItems: 'center',
@@ -94,7 +86,7 @@ export default function Home ({navigation, route}) {
       height: 300,
       borderRadius: 25,
       position: "absolute",
-      top: 150,
+      top: 75,
       
     },
   });
