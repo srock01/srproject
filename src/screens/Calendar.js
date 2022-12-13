@@ -2,7 +2,7 @@ import {
     StyleSheet,
     Text,
     View,
-    Button,
+    Pressable,
     Modal,
     TouchableOpacity,
 } from "react-native";
@@ -44,8 +44,8 @@ export default function CalendarPage() {
     }
 
     return (
-        <View style={{ backgroundColor: "dodgerblue", flex: 1 }}>
-            <Modal transparent={true} show={false} visible={show}>
+        <View style={stylesFinal.Container}>
+            {/* <Modal transparent={true} show={false} visible={show}>
                 <Calendar
                     style={{ borderRadius: 5, margin: 30, top: 100 }}
                     onDayPress={(date) => {
@@ -71,28 +71,109 @@ export default function CalendarPage() {
             <FutureButton
                 text="Plan To Wear: (hold day)"
                 onPress={() => setShow(true)}
-            />
+            /> */}
+
+            <View style={stylesFinal.content}>
+                <Modal transparent={true} show={false} visible={show}>
+                    <Calendar
+                        style={stylesFinal.Calendar}
+                        onDayPress={(date) => {
+                            setDatePicker(
+                                date.month + "/" + date.day + "/" + date.year
+                            );
+                        }}
+                        onDayLongPress={(date) => {
+                            setFuturePicker(
+                                date.month + "/" + date.day + "/" + date.year
+                            );
+                        }}
+                    />
+                    <Pressable
+                        style={stylesFinal.CloseButton}
+                        onPress={() => setShow(false)}
+                    >
+                        <Text style={stylesFinal.text}>Close</Text>
+                    </Pressable>
+                </Modal>
+            </View>
+            <View style={stylesFinal.Footer}>
+                <Pressable
+                    style={stylesFinal.Button}
+                    onPress={() => setShow(!show)}
+                >
+                    <Text style={stylesFinal.text}>Wore On</Text>
+                </Pressable>
+                <Pressable
+                    style={stylesFinal.Button}
+                    onPress={() => setShow(true)}
+                >
+                    <Text style={stylesFinal.text}>Plan</Text>
+                </Pressable>
+            </View>
         </View>
     );
 }
 
 //Wore on Button
+const stylesFinal = StyleSheet.create({
+    Container: {
+        flex: 1,
+        backgroundColor: "#1C4BA5",
+    },
+    content: {
+        flex: 1,
+        flexDirection: 'column',
+    },
+    Calendar: {
+        marginTop: 75,
+        margin: 20,
+    },
+    CloseButton: {
+        alignItems: "center",
+        borderRadius: 6,
+        backgroundColor: "black",
+        width: 150,
+        paddingVertical: 10,
+        alignSelf: 'center',
+    },
+    Button: {
+        marginTop: 10,
+        alignItems: "center",
+        justifyContent: "center",
+        paddingVertical: 10,
+        paddingHorizontal: 28,
+        borderRadius: 6,
+        backgroundColor: "black",
+        width: 150,
+    },
+    text: {
+        alignItems: "center",
+        justifyContent: "center",
+        fontSize: 16,
+        lineHeight: 21,
+        fontWeight: "bold",
+        letterSpacing: 0.25,
+        color: "white",
+    },
+    Footer: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        margin: 15,
+        //make view at the bottom of screen
+    },
+});
 const styles = StyleSheet.create({
     button: {
+        flex: 1,
         paddingVertical: 10,
         paddingHorizontal: 5,
-        maxWidth: 150,
-        maxHeight: 90,
-        top: 550,
-        left: 5,
         borderRadius: 7,
         backgroundColor: "blue",
-        justifyContent: "center",
-        alignItems: "center",
         textAlign: "center",
     },
     buttonText: {
         color: "white",
+        margin: 10,
         fontWeight: "bold",
         fontSize: "16",
         textAlign: "center",
