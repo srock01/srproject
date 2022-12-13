@@ -118,7 +118,7 @@ export default function Closet({ navigation, navigation: { goBack }, route }) {
                 <TouchableOpacity
                     style={styles.buttonTO}
                     onPress={() =>
-                        navigation.navigate("AddArticle", { email: email })
+                        navigation.navigate("AddOutfit", { email: email })
                     }
                 >
                     <View>

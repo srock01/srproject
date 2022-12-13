@@ -66,7 +66,7 @@ useEffect(() => {
     </View>
       
   
-      <View style={{ flex: 1,paddingTop:15, paddingBottom: 80, height: 600}}>
+      <View style={{ flex: 1,paddingTop:15, paddingBottom: 80, height: 600, alignItems:"center"}}>
         <Image source={{ uri: clothes.Shirt }} style={{ width: 200, height: 200 }} />
         <Image source={{ uri: clothes.Pants }} style={{ width: 200, height: 200 }} />
      </View>
