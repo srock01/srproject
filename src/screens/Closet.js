@@ -135,28 +135,33 @@ export default function Closet({ navigation, navigation: { goBack }, route }) {
 
 const styles = StyleSheet.create({
     bruh: {
-        backgroundColor: "blue",
+        backgroundColor: "#1C4BA5",
         justifyContent: "space-between"
     },
     button: {
         flex: 1,
-        right:85,
-        margin:5,
-        bottom:10,
-        position:'absolute',
+        // right:85,
+        // margin:5,
+        // bottom:10,
+        // position:'absolute',
+        flex: 'center',
+        alignItems: 'center',
     },
     buttonTO: {
         borderColor: "black",
         borderRadius: 50,
-        backgroundColor: "white",
+        backgroundColor: "#1C4BA5",
+        marginRight: 10,
+        bottom: 40,
     },
     buttonTxt: {
-        fontSize: 28,
-        margin: 5,
+        fontSize: 25,
+        margin: 10,
         padding: 5,
         alignItems: "center",
         justifyContent: "center",
-        color: "black",
+        color: "white",
+        fontWeight: "bold",
     },
     header: {
         display: "flex",

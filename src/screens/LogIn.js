@@ -11,6 +11,7 @@ import {
     View,
     TouchableOpacity,
     Alert,
+    Dimensions,
 } from "react-native";
 const firebaseConfig = {
     apiKey: "AIzaSyAF9QW9bvXKyWIiPpmaOgKunA51Jxe4iAw",
@@ -22,6 +23,9 @@ const firebaseConfig = {
     appId: "1:217796469697:web:3324196fa615c8c4f6c540",
     measurementId: "G-F0RSLNR2DY",
 };
+
+
+const {height} = Dimensions.get("window");
 
 require("firebase/firestore");
 
@@ -121,8 +125,10 @@ const styles = StyleSheet.create({
         backgroundColor: "#1C4BA5",
         alignItems: "center",
         justifyContent: "center",
-        borderRadius: 5,
+        borderRadius: 0,
         borderColor: "#1C4BA5",
+        paddingBottom: "20%",
+        height: height,
     },
 
     inputView: {
@@ -160,13 +166,7 @@ const styles = StyleSheet.create({
         height: 50,
         alignItems: "center",
         justifyContent: "center",
-        marginTop: 20,
         backgroundColor: "white",
-    },
-    loginOr: {
-        paddingTop: 20,
-        color: "white",
-        fontSize: 15,
     },
     image: {
         width: 300,

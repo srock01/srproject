@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, View, Text } from 'react-native';
+import { Button, View, Text, StyleSheet, Pressable, Image } from 'react-native';
 import { initializeApp } from "firebase/app";
 import {
   getDocs,
@@ -35,19 +35,58 @@ export default function Home ({navigation, route}) {
   const { email } = route.params;
   
     return (
-      <View>
-        <Text>Home Screen </Text>
+      <View style={styles.container}>
+        
+        <Image style={styles.image} source={require("../../assets/logo2.jpeg")} />
 
-        <Button
-          title="Closet"
-          color="blue"
-          onPress={() => navigation.navigate('Closet',{ email: email })}
-        />
-        <Button
-          title="OutfitList"
-          color="blue"
-          onPress={() => navigation.navigate('OutfitList',{ email: email })}
-        />
+
+        <Pressable style={styles.Button} onPress={() => navigation.navigate('Closet',{ email: email })}>
+          <Text style={styles.text}>Closet</Text>
+        </Pressable>
+        <Pressable style={styles.Button} onPress={() => navigation.navigate('OutfitList',{ email: email })}>
+          <Text style={styles.text}>Outfits</Text>
+        </Pressable>
+        <Pressable style={styles.Button} onPress={() => navigation.navigate('Calendar')}>
+          <Text style={styles.text}>Calendar</Text>
+        </Pressable>
+        
       </View>
     );
   }
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: "#1C4BA5",
+      paddingTop: 300,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    Button: {
+      marginTop: 10,
+      top: 50,
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingVertical: 10,
+      paddingHorizontal: 28,
+      borderRadius: 6,
+      backgroundColor: 'black',
+      width: 150,
+    },
+    text: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      fontSize: 16,
+      lineHeight: 21,
+      fontWeight: 'bold',
+      letterSpacing: 0.25,
+      color: 'white',
+    },
+    image: {
+      width: 300,
+      height: 300,
+      borderRadius: 25,
+      position: "absolute",
+      top: 75,
+      
+    },
+  });
