@@ -45,17 +45,15 @@ const db = getFirestore(app);
 
 export default function Closet({ navigation, navigation: { goBack }, route }) {
     const [clothes, setClothes] = useState([]);
-    const { email, menu } = route.params;
+    const { email } = route.params;
     
     const fetchBlogs = async () => {
-        if(menu){
-            navigation.navigate("HomeMenu", {email:email})
-        }
+        
         console.log(email);
         const list = [];
         if (email != null) {
             const querySnapshot = await getDocs(
-                collection(db, "users", email, "clothes")
+                collection(db, "users", email, "outfits")
             );
 
             querySnapshot.forEach((doc) => {
@@ -78,7 +76,6 @@ export default function Closet({ navigation, navigation: { goBack }, route }) {
         <View style={{ flex: 1 }}>
             <View style={[styles.bruh, { flexDirection: "row" }]}>
                 <Text style={styles.titleType}> Name </Text>
-                <Text style={styles.titleType}> Type </Text>
                 <Text style={styles.titleWeather}> Weather </Text>
             </View>
             <View
@@ -96,7 +93,7 @@ export default function Closet({ navigation, navigation: { goBack }, route }) {
                             <TouchableOpacity
                                 style={styles.items}
                                 onPress={() =>
-                                    navigation.navigate("Article", {
+                                    navigation.navigate("Outfit", {
                                         name: item.name,
                                         type: item.type,
                                         weather: item.weather,
@@ -107,7 +104,7 @@ export default function Closet({ navigation, navigation: { goBack }, route }) {
                             >
                                 <View style={styles.budgetTagsContainer}>
                                     <Text style={styles.name}>{item.name}</Text>
-                                    <Text style={styles.type}>{item.type}</Text>
+                                    <Text style={styles.type}></Text>
                                     <Text style={styles.weather}>
                                         {item.weather}
                                     </Text>
@@ -125,7 +122,7 @@ export default function Closet({ navigation, navigation: { goBack }, route }) {
                     }
                 >
                     <View>
-                        <Text style={styles.buttonTxt}>ADD ARTICLE</Text>
+                        <Text style={styles.buttonTxt}>ADD OUTFIT</Text>
                     </View>
                 </TouchableOpacity>
             </View>

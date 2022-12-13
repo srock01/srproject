@@ -19,6 +19,8 @@ import Article from "./src/screens/Article";
 import ForgotPassword from "./src/screens/ForgotPassword";
 import CalendarScreen from "./src/screens/Calendar";
 import AddArticle from "./src/screens/AddArticle";
+import Outfit from "./src/screens/Outfit";
+import OutfitList from "./src/screens/OutfitList";
 
 const firebaseConfig = {
     apiKey: "AIzaSyAF9QW9bvXKyWIiPpmaOgKunA51Jxe4iAw",
@@ -99,6 +101,8 @@ const App = () => {
                 />
                 <Stack.Screen name="AddArticle" component={AddArticle} />
                 <Stack.Screen name="Calendar" component={CalendarScreen} />
+                <Stack.Screen name="Outfit" component={Outfit} />
+                <Stack.Screen name="OutfitList" component={OutfitList} />
             </Stack.Navigator>
         </NavigationContainer>
     );

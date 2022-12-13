@@ -43,6 +43,11 @@ export default function Home ({navigation, route}) {
           color="blue"
           onPress={() => navigation.navigate('Closet',{ email: email })}
         />
+        <Button
+          title="OutfitList"
+          color="blue"
+          onPress={() => navigation.navigate('OutfitList',{ email: email })}
+        />
       </View>
     );
   }
