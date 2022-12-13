@@ -46,6 +46,9 @@ export default function Home ({navigation, route}) {
         <Pressable style={styles.Button} onPress={() => navigation.navigate('OutfitList',{ email: email })}>
           <Text style={styles.text}>Outfits</Text>
         </Pressable>
+        <Pressable style={styles.Button} onPress={() => navigation.navigate('Calendar')}>
+          <Text style={styles.text}>Calendar</Text>
+        </Pressable>
 
         {/* <Button
           style={styles.Button}
@@ -78,7 +81,7 @@ export default function Home ({navigation, route}) {
       paddingHorizontal: 28,
       borderRadius: 6,
       backgroundColor: 'black',
-      width: 120,
+      width: 130,
     },
     text: {
       alignItems: 'center',
