@@ -255,15 +255,9 @@ export default function AddArticle({route, navigation}) {
     }catch{
       console.error("Error adding document: ", e);
     }
-
-      await getDownloadURL(ref(storage, reference))
-        .then((url) => {
-            
-            console.log(url);
-            console.log("test");
-            setUrl(url)
-        })
-        .catch((error) => {
+    
+        /*.catch((error) => {
+          console.log("test");
           // A full list of error codes is available at
           // https://firebase.google.com/docs/storage/web/handle-errors
           switch (error.code) {
@@ -283,11 +277,37 @@ export default function AddArticle({route, navigation}) {
               // Unknown error occurred, inspect the server response
               break;
           }
-        });
+        });*/
         await updateDoc(user, {
           total: mom+1
         });
       
+  }
+  async function  pickImageAgain ()  {
+    let mom;
+    let user1 = await getDoc(doc(db, "users", email));
+      if (user1.exists()) {
+        mom =user1.get("total")-1;
+      } 
+    try{
+      await getDownloadURL(ref(storage, 'image/'+email+mom))
+      
+      .then((url) => {
+          console.log(url);
+          console.log("test123");
+          setUrl(url)
+      })
+
+    }
+    catch{
+      if(url =""){
+        Alert.alert("IMG Upload Failure", "Please Try Again", [
+          
+          { text: "OK", onPress: () => console.log("OK Pressed") },
+      ]);
+      console.log("Incorrect password.");
+      }}
+
   }
   return (
     <>
@@ -301,12 +321,15 @@ export default function AddArticle({route, navigation}) {
             onChangeText={(name) => setName(name)}
           />
         </View>
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-          <Button title="Pick an image from camera roll" onPress={pickImage} />
-          {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
+        
+          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center',}}>
+            <Button title="Pick an image from camera roll" onPress={pickImage} />
+            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', flexDirection: 'row'}}>
+              {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
+              <Button title="Confirm Image" onPress={pickImageAgain} />
+          </View>
           
         </View>
-
         <View style={styles.inputView2}>
           <TouchableWithoutFeedback onPress={onPressT}>
             <View style={pressedT? styles.btnNormal:styles.btnPress}>

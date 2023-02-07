@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "DripOrDrown",
-    "slug": "DripOrDrown",
+    "name": "SL APP",
+    "slug": "sl-app",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/logo3.png",
+    "icon": "./assets/SL_APP_Icon.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/logo3.png",

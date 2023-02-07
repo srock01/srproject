@@ -1,9 +1,7 @@
-import React, { useState, useContext,  } from "react";
+import React, { useState } from "react";
 import { initializeApp } from "firebase/app";
 import { getFirestore, getDoc, doc } from "firebase/firestore/lite";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { Context } from './context';
-
 import {
     StatusBar,
     StyleSheet,
@@ -23,22 +21,20 @@ const firebaseConfig = {
     storageBucket: "srproject-75728.appspot.com",
     messagingSenderId: "920612695893",
     appId: "1:920612695893:web:dff9096bd171cca13709dc",
-    measurementId: "G-Z5ZCFJCV52"
+    measurementId: "G-Z5ZCFJCV52",
   };
 
 
 const {height} = Dimensions.get("window");
 
 require("firebase/firestore");
-let val;
+
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-let b =false;
 
 export default function LogIn({ navigation }) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const myContext = useContext(Context);
     return (
         <>
             <KeyboardAwareScrollView>
@@ -47,7 +43,7 @@ export default function LogIn({ navigation }) {
 
                     <Image
                         style={styles.image}
-                        source={require("/Users/seanrock/Downloads/srproject/assets/SL_APP_Icon.png")}
+                        source={require("../../assets/logo2.jpeg")}
                     />
 
                     <View style={styles.inputView}>
@@ -81,7 +77,7 @@ export default function LogIn({ navigation }) {
 
                     <TouchableOpacity
                         style={styles.loginBtn}
-                        onPress={() => fortnite(myContext,email, password,navigation)}
+                        onPress={() => loginPress(email, password, navigation)}
                     >
                         <Text style={styles.registerText}>LOGIN</Text>
                     </TouchableOpacity>
@@ -90,46 +86,14 @@ export default function LogIn({ navigation }) {
         </>
     );
 }
-function fortnite(myContext,email,password,navigation){
-    
-    
 
-    loginPress(myContext,email,password,navigation);
-    var start = new Date().getTime();
-    var end = start;
-    while(end < start + 1000) {
-     end = new Date().getTime();
-    }
-    console.log(b+"b");
-    
-}
-function fortnite2(myContext, b){
-    if(b){
-        console.log(myContext.email);
-        console.log(myContext.boole+'gkjndj');
-        
-        myContext.setB(true);
-       // navigation.navigate("Register", { email: email });
-    }
-}
-async function loginPress(myContext,email, password, navigation) {
-   // const myContext = useContext(Context);
+async function loginPress(email, password, navigation) {
     let user = await getDoc(doc(db, "users", email));
     if (user.exists()) {
         if (password === (await user.get("password"))) {
             //login to homepage
-            
-           // console.log(myContext.boole);
-            console.log(myContext.email);
-            b = true;
-            if(b){
-                myContext.setE({ ...myContext.email, value: email });
-                myContext.setBoole({...myContext.boole,value:true});
-                fortnite2(myContext,b)
-            }
-
-           // navigation.navigate("Home", { email: email });
-            
+            navigation.navigate("Home", { email: email });
+            console.log("Login Successful.");
         } else {
             //incorrect password
             Alert.alert("Login Failure", "Incorrect password", [
@@ -154,7 +118,6 @@ async function loginPress(myContext,email, password, navigation) {
         console.log("User does not exist.");
     }
 }
-
 
 const styles = StyleSheet.create({
     container: {

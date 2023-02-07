@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Modal, TouchableOpacity} from 'react-native';
+import { StyleSheet, Text, View, Modal, TouchableOpacity, ScrollView} from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import { useState } from 'react';
 
@@ -40,6 +40,7 @@ export default function App() {
  
   return (
     //calendar is fine. buttons are the problem
+    <ScrollView>
     <View style={{backgroundColor: '#1C4BA5', flex:1, }}>
         <View> 
       <Modal
@@ -67,6 +68,7 @@ export default function App() {
 
         </View>
     </View>
+    </ScrollView>
   );
 }
 

@@ -14,7 +14,7 @@ export default function LoadIn({ navigation }) {
     <View style={styles.container}>
       <StatusBar style="auto" />
 
-      <Image style={styles.image} source={require("../../assets/logo2.jpeg")} />
+      <Image style={styles.image} source={require("../../assets/SL_APP_Icon.png")} />
 
       <TouchableOpacity
         style={styles.loginBtn}

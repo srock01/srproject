@@ -1,21 +1,19 @@
-import React, { useState, useContext,  } from "react";
+import React, { createContext, useContext, useEffect,useState } from "react";
 import { initializeApp } from "firebase/app";
-import { getFirestore, getDoc, doc } from "firebase/firestore/lite";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { Context } from './context';
-
+import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore/lite";
 import {
     StatusBar,
     StyleSheet,
-    TextInput,
     Text,
+    TextInput,
     Image,
     View,
     TouchableOpacity,
-    Alert,
     Dimensions,
-    
 } from "react-native";
+
+import { Context } from './context';
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 const firebaseConfig = {
     apiKey: "AIzaSyB2FzOefuDJNQHq1QLNs0dZJ5nsSeq-JyA",
     authDomain: "srproject-75728.firebaseapp.com",
@@ -25,20 +23,39 @@ const firebaseConfig = {
     appId: "1:920612695893:web:dff9096bd171cca13709dc",
     measurementId: "G-Z5ZCFJCV52"
   };
-
-
-const {height} = Dimensions.get("window");
-
 require("firebase/firestore");
-let val;
+
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-let b =false;
+const { height } = Dimensions.get("window");
 
-export default function LogIn({ navigation }) {
+//const auth = getAuth();
+let val;
+/*function MyComponent() {
+    createUserWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+        // Signed in 
+        const user = userCredential.user;
+        // ...
+        val=true;
+    })
+    .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // ..
+        val=false;
+    });
+    return (
+        <Context.Provider value={val}>
+          <MyComponent />
+        </Context.Provider>
+      );
+    }*/
+
+
+export default function SignUp() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const myContext = useContext(Context);
     return (
         <>
             <KeyboardAwareScrollView>
@@ -47,7 +64,7 @@ export default function LogIn({ navigation }) {
 
                     <Image
                         style={styles.image}
-                        source={require("/Users/seanrock/Downloads/srproject/assets/SL_APP_Icon.png")}
+                        source={require("/Users/seanrock/SRPROJECT/assets/SL_APP_Icon.png")}
                     />
 
                     <View style={styles.inputView}>
@@ -55,7 +72,6 @@ export default function LogIn({ navigation }) {
                             style={styles.TextInput}
                             placeholder="Email"
                             placeholderTextColor="#003f5c"
-                            keyboardType="email-address"
                             onChangeText={(email) =>
                                 setEmail(email.toLowerCase())
                             }
@@ -71,68 +87,24 @@ export default function LogIn({ navigation }) {
                             onChangeText={(password) => setPassword(password)}
                         />
                     </View>
-                    <TouchableOpacity
-                        onPress={() => navigation.navigate("Forgot Password")}
-                    >
-                        <Text style={styles.forgot_button}>
-                            Forgot Password?
-                        </Text>
-                    </TouchableOpacity>
 
                     <TouchableOpacity
                         style={styles.loginBtn}
-                        onPress={() => fortnite(myContext,email, password,navigation)}
+                        onPress={() => registerPress(email, password)}
                     >
-                        <Text style={styles.registerText}>LOGIN</Text>
+                        <Text style={styles.registerText}>REGISTER</Text>
                     </TouchableOpacity>
                 </View>
             </KeyboardAwareScrollView>
         </>
     );
 }
-function fortnite(myContext,email,password,navigation){
-    
-    
 
-    loginPress(myContext,email,password,navigation);
-    var start = new Date().getTime();
-    var end = start;
-    while(end < start + 1000) {
-     end = new Date().getTime();
-    }
-    console.log(b+"b");
-    
-}
-function fortnite2(myContext, b){
-    if(b){
-        console.log(myContext.email);
-        console.log(myContext.boole+'gkjndj');
-        
-        myContext.setB(true);
-       // navigation.navigate("Register", { email: email });
-    }
-}
-async function loginPress(myContext,email, password, navigation) {
-   // const myContext = useContext(Context);
-    let user = await getDoc(doc(db, "users", email));
-    if (user.exists()) {
-        if (password === (await user.get("password"))) {
-            //login to homepage
-            
-           // console.log(myContext.boole);
-            console.log(myContext.email);
-            b = true;
-            if(b){
-                myContext.setE({ ...myContext.email, value: email });
-                myContext.setBoole({...myContext.boole,value:true});
-                fortnite2(myContext,b)
-            }
-
-           // navigation.navigate("Home", { email: email });
-            
-        } else {
-            //incorrect password
-            Alert.alert("Login Failure", "Incorrect password", [
+async function registerPress(email, password) {
+    try {
+        let user = await getDoc(doc(db, "users", email));
+        if (user.exists()) {
+            Alert.alert("Sign Up Failure", "User already exists", [
                 {
                     text: "Cancel",
                     onPress: () => console.log("Cancel Pressed"),
@@ -140,21 +112,18 @@ async function loginPress(myContext,email, password, navigation) {
                 },
                 { text: "OK", onPress: () => console.log("OK Pressed") },
             ]);
-            console.log("Incorrect password.");
+            console.log("Creation Failed. User already exists");
+        } else {
+            await setDoc(doc(db, "users", email), {
+                password: password,
+                total: 0,
+            });
+            console.log("Account Created.");
         }
-    } else {
-        Alert.alert("Login Failure", "User does not exist", [
-            {
-                text: "Cancel",
-                onPress: () => console.log("Cancel Pressed"),
-                style: "cancel",
-            },
-            { text: "OK", onPress: () => console.log("OK Pressed") },
-        ]);
-        console.log("User does not exist.");
+    } catch (e) {
+        console.error("Error adding document: ", e);
     }
 }
-
 
 const styles = StyleSheet.create({
     container: {
@@ -164,7 +133,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         borderRadius: 0,
         borderColor: "#1C4BA5",
-        paddingBottom: "20%",
+        paddingBottom: "17%",
         height: height,
     },
 
@@ -204,6 +173,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
         backgroundColor: "white",
+        marginTop: 45,
     },
     image: {
         width: 300,
