@@ -11,9 +11,11 @@ import {
     Text,
     Image,
     View,
+    Pressable,
     TouchableOpacity,
     Alert,
     Dimensions,
+    Button
     
 } from "react-native";
 const firebaseConfig = {
@@ -26,7 +28,10 @@ const firebaseConfig = {
     measurementId: "G-Z5ZCFJCV52"
   };
 
-
+  import * as Google from 'expo-auth-session/providers/google';
+  import * as WebBrowser from 'expo-web-browser';
+  
+  WebBrowser.maybeCompleteAuthSession();
 const {height} = Dimensions.get("window");
 
 require("firebase/firestore");
@@ -35,7 +40,81 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 let b =false;
 
+
 export default function LogIn({ navigation }) {
+    const [c, setC] = useState(false);
+    const [accessToken, setAccessToken] = React.useState();
+    const [userInfo, setUserInfo] = React.useState();
+    const [message, setMessage] = React.useState();
+  
+    const [request, response, promptAsync] = Google.useAuthRequest({
+      expoClientId: "816172760104-betq1tlvsb56rhc5o0n4ofhvoba3mle1.apps.googleusercontent.com"
+    });
+  
+    React.useEffect(() => {
+      setMessage(JSON.stringify(response));
+      if (response?.type === "success") {
+        setAccessToken(response.authentication.accessToken);
+        
+      }
+    }, [response]);
+    
+
+    
+    function bruh2(){
+        getUserData();
+    }
+
+    async function getUserData() {
+        let userInfoResponse = await fetch("https://www.googleapis.com/userinfo/v2/me", {
+          headers: { Authorization: `Bearer ${accessToken}`}
+        });
+    
+        userInfoResponse.json().then(data => {
+          setUserInfo(data);
+          setC(true);
+         // console.log(userInfo.email)
+        });
+        
+    }
+
+      
+    
+    async function getUserData2(myContext) {  
+    console.log(userInfo.email+"jgkhsjkhdhjk");
+    let user = await getDoc(doc(db, "users", userInfo.email));
+    if (user.exists()) {
+        //setPassword(await user.get("password"));
+            //login to homepage
+            
+           // console.log(myContext.boole);
+            console.log(myContext.email);
+            b = true;
+            if(b){
+                myContext.setE(userInfo.email);
+                myContext.setBoole({...myContext.boole,value:true});
+                fortnite2(myContext,b,userInfo.email)
+            }
+
+           // navigation.navigate("Home", { email: email });
+            
+        
+    }
+     
+    }
+  
+    function showUserInfo() {
+      if (userInfo) {
+        return (
+          <View style={styles.userInfo}>
+            <Image source={{uri: userInfo.picture}} style={styles.profilePic} />
+            <Text>Welcome {userInfo.name}</Text>
+            <Text>{userInfo.email}</Text> 
+          </View>
+        );
+      }
+    }
+
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const myContext = useContext(Context);
@@ -47,13 +126,24 @@ export default function LogIn({ navigation }) {
 
                     <Image
                         style={styles.image}
-                        source={require("/Users/seanrock/Downloads/srproject/assets/SL_APP_Icon.png")}
+                        source={require("../../assets/SL_APP_Icon.png")}
                     />
-
+                    
+                <View style={styles.inputView}>
+                
+                <TouchableOpacity 
+                style={styles.inputView2}
+                onPress={accessToken ? bruh2 : () => { promptAsync({useProxy: true, showInRecents: true}) }}
+                > 
+                <Image 
+                style={styles.inputView2}
+                source={accessToken ?require("../../assets/c.jpeg"):require("../../assets/b.jpeg")}
+                /></TouchableOpacity>
+                </View>
                     <View style={styles.inputView}>
                         <TextInput
                             style={styles.TextInput}
-                            placeholder="Email"
+                            placeholder={c? userInfo.email:"Email"}
                             placeholderTextColor="#003f5c"
                             keyboardType="email-address"
                             onChangeText={(email) =>
@@ -64,24 +154,18 @@ export default function LogIn({ navigation }) {
 
                     <View style={styles.inputView}>
                         <TextInput
-                            style={styles.TextInput}
-                            placeholder="Password"
+                            style={c?[{fontSize:20},{fontWeight:'bold'},styles.TextInput]:styles.TextInput}
+                            placeholder={c? "•••••":"Password"}
                             placeholderTextColor="#003f5c"
                             secureTextEntry={true}
                             onChangeText={(password) => setPassword(password)}
                         />
                     </View>
-                    <TouchableOpacity
-                        onPress={() => navigation.navigate("Forgot Password")}
-                    >
-                        <Text style={styles.forgot_button}>
-                            Forgot Password?
-                        </Text>
-                    </TouchableOpacity>
+                    
 
                     <TouchableOpacity
                         style={styles.loginBtn}
-                        onPress={() => fortnite(myContext,email, password,navigation)}
+                        onPress={() => {c?getUserData2(myContext):fortnite(myContext,email,password,navigation)}}
                     >
                         <Text style={styles.registerText}>LOGIN</Text>
                     </TouchableOpacity>
@@ -95,19 +179,12 @@ function fortnite(myContext,email,password,navigation){
     
 
     loginPress(myContext,email,password,navigation);
-    var start = new Date().getTime();
-    var end = start;
-    while(end < start + 1000) {
-     end = new Date().getTime();
-    }
-    console.log(b+"b");
-    
 }
-function fortnite2(myContext, b){
+function fortnite2(myContext, b, email){
     if(b){
         console.log(myContext.email);
         console.log(myContext.boole+'gkjndj');
-        
+        myContext.setE(email);
         myContext.setB(true);
        // navigation.navigate("Register", { email: email });
     }
@@ -120,12 +197,12 @@ async function loginPress(myContext,email, password, navigation) {
             //login to homepage
             
            // console.log(myContext.boole);
-            console.log(myContext.email);
+            console.log(myContext.email+'djhfdjh');
             b = true;
             if(b){
                 myContext.setE({ ...myContext.email, value: email });
                 myContext.setBoole({...myContext.boole,value:true});
-                fortnite2(myContext,b)
+                fortnite2(myContext,b, email)
             }
 
            // navigation.navigate("Home", { email: email });
@@ -183,6 +260,15 @@ const styles = StyleSheet.create({
         padding: 10,
         textAlign: "center",
     },
+    inputView2: {
+        backgroundColor: "white",
+        borderRadius: 30,
+        width: "100%",
+        height: 45,
+        marginBottom: 20,
+        alignItems: "center",
+        
+    },
 
     forgot_button: {
         height: 30,
@@ -208,7 +294,7 @@ const styles = StyleSheet.create({
     image: {
         width: 300,
         height: 300,
-        marginBottom: 50,
+        marginBottom: 20,
         borderRadius: 25,
     },
 });

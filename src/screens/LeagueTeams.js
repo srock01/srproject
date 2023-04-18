@@ -1,71 +1,106 @@
-import React, { useState, useEffect } from "react";
-import {
-    View,
-    Text,
-    StyleSheet,
-    Image,
-    FlatList,
-    TouchableOpacity,
-    Button,
-} from "react-native";
-
+import React from 'react';
+import { useContext, useState, useEffect, useLayoutEffect } from 'react';
+import { Button, View, Text, StyleSheet, Pressable, Image,TouchableOpacity, FlatList } from 'react-native';
 import { initializeApp } from "firebase/app";
-import {
-    getDocs,
-    getFirestore,
-    collection,
-    firestore,
-    firebase,
-    addDoc,
-    get,
-    doc,
-    getDoc,
-    limit,
-    query,
-    where,
-    setDoc,
-    getDocFromCache,
-} from "firebase/firestore/lite";
-import { color } from "react-native-reanimated";
+import { Context } from './context';
+import { useFocusEffect } from '@react-navigation/native';
+import {getDocs,getFirestore, collection, query, where, firestore, firebase, addDoc, get, doc, getDoc,setDoc,getDocFromCache,onSnapshot} from "firebase/firestore";
+import { color } from 'react-native-reanimated';
 const firebaseConfig = {
-    apiKey: "AIzaSyB2FzOefuDJNQHq1QLNs0dZJ5nsSeq-JyA",
+  apiKey: "AIzaSyB2FzOefuDJNQHq1QLNs0dZJ5nsSeq-JyA",
     authDomain: "srproject-75728.firebaseapp.com",
     projectId: "srproject-75728",
     storageBucket: "srproject-75728.appspot.com",
     messagingSenderId: "920612695893",
     appId: "1:920612695893:web:dff9096bd171cca13709dc",
     measurementId: "G-Z5ZCFJCV52"
-  };
+};
 
 require("firebase/firestore");
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-export default function Closet({ navigation, navigation: { goBack }, route }) {
-    const [clothes, setClothes] = useState([]);
-    const { email, menu } = route.params;
-    
-    const fetchBlogs = async () => {
-        if(menu){
-            navigation.navigate("HomeMenu", {email:email})
-        }
-        console.log(email);
-        const list = [];
-        if (email != null) {
-            const querySnapshot = await getDocs(
-                collection(db, "users", email, "clothes")
-            );
+export default function LeagueTeams ({navigation, route}) {
+  const [clothes, setClothes] = useState([]);
+  const myContext= useContext(Context);
+  let email = myContext.email;
+  const [a3,setA3] =useState(true);
+  const [a4,setA4] =useState(true);
+  const [b,setB] =useState(true);
 
+  const {  name,org} = route.params;
+  
+  const fetchBlogs2=async()=>{
+    const myDoc = doc(db, "organization", org, "league", name)
+    const user = await getDoc(myDoc);
+    const user1 = onSnapshot(myDoc,(doc)=>{
+    if(doc.data()!==null){
+
+      if(doc.data().currentTeams===doc.data().maxTeam)
+        setA4(true);
+      else
+        setA4(false);
+
+    }});
+    setA4(false);
+};    
+    
+useLayoutEffect(() => {
+  fetchBlogs2();
+
+ }, [])
+  function fetchBlogs1(name,org,team,league,myContext)  {
+    myContext.setT(name);
+    navigation.navigate('OTeam',{
+                screen: 'About',
+                params:{name:name, org:org,team:team, b:b,league:league },});
+    }
+    const fetchBlogs = async () => {
+        
+        console.log(email+'fjds');
+        let list = [];
+        const q=query(collection(db, "organization", org, "teams"),where("league","==",name));
+        if (email != null) {
+          console.log("ghd");
+            const unsubscribe = onSnapshot(q, (querySnapshot) => {
+                list=[];
+                let a= true;
             querySnapshot.forEach((doc) => {
+                
+                let po=true;
+                
+                
+                
                 let myData = doc.data();
                 myData.id = doc.id;
-                myData.e = email;
-                list.push({ ...myData });
+                console.log(!querySnapshot.metadata.fromCache+"hjghjdhj  "+a3)
+                
+              //  if(change.type === "removed"){
+                   /* console.log(change.type);
+                    const index = array.indexOf(change.doc.id);
+                    if (index > -1)  // only splice array when item is found
+                        array.splice(index, 1); // 2nd parameter means remove one item only
+            //   }*/
+              //  if(change.type === "added"){
+                   // console.log(change.type);
+                    list.push({ ...myData });
                 // doc.data() is never undefined for query doc snapshots
-                console.log(doc.id, " => ", doc.data());
-                setClothes(list);
+              //  console.log(change.doc.id, " => ", change.doc.data());
+                setClothes(list);//}
+                
+                for (let p=0;p<doc.data().Players.length;p++){
+                    if(doc.data().Players[p]===email){
+                        setB(false);
+                        a=false}
+                }
+               
             });
+            if(a)
+                setB(true);
+            setA3(false);
+        });
+
         }
     };
 
@@ -74,19 +109,16 @@ export default function Closet({ navigation, navigation: { goBack }, route }) {
     }, []);
     var str = "<";
     return (
-        <View style={{ flex: 1 }}>
-            <View style={[styles.bruh, { flexDirection: "row" }]}>
-                <Text style={styles.titleType}> Name </Text>
-                <Text style={styles.titleType}> Type </Text>
-                <Text style={styles.titleWeather}> Weather </Text>
-            </View>
+        <View style={{ flex: 1, backgroundColor:'#1C4BA5'}}>
+            
             <View
                 style={{
                     flex: 1,
                     paddingTop: 15,
-                    paddingBottom: 80,
+                    paddingBottom: 15,
                 }}
             >
+            <Text style={styles.buttonTxt}>{name} TEAMS</Text>
                 <FlatList
                     data={clothes}
                     //   keyExtractor={item => item.id}
@@ -95,21 +127,10 @@ export default function Closet({ navigation, navigation: { goBack }, route }) {
                             <TouchableOpacity
                                 style={styles.items}
                                 onPress={() =>
-                                    navigation.navigate("Article", {
-                                        name: item.name,
-                                        type: item.type,
-                                        weather: item.weather,
-                                        id: item.id,
-                                        e: item.e,
-                                    })
-                                }
+                                    fetchBlogs1(item.id,item.org,item.name,item.league,myContext)}
                             >
                                 <View style={styles.budgetTagsContainer}>
                                     <Text style={styles.name}>{item.name}</Text>
-                                    <Text style={styles.type}>{item.type}</Text>
-                                    <Text style={styles.weather}>
-                                        {item.weather}
-                                    </Text>
                                 </View>
                             </TouchableOpacity>
                         </View>
@@ -117,17 +138,16 @@ export default function Closet({ navigation, navigation: { goBack }, route }) {
                 />
             </View>
             <View style={styles.button}>
-                <TouchableOpacity
-                    style={styles.buttonTO}
-                    onPress={() =>
-                        navigation.navigate("AddArticle", { email: email })
-                    }
-                >
-                    <View>
-                        <Text style={styles.buttonTxt}>ADD ARTICLE</Text>
-                    </View>
-                </TouchableOpacity>
-            </View>
+                {a4||!b?<View></View>:<TouchableOpacity
+                style={styles.buttonTO}
+                onPress={() => navigation.navigate('Create Team',{league:name,org:org})}>
+                <View>
+                    <Text style={styles.buttonTxt2}>CREATE TEAM</Text>
+                </View>
+                </TouchableOpacity>}
+        
+      </View>
+            
         </View>
     );
 }
@@ -149,9 +169,9 @@ const styles = StyleSheet.create({
     buttonTO: {
         borderColor: "black",
         borderRadius: 50,
-        backgroundColor: "#1C4BA5",
+        backgroundColor: "white",
         marginRight: 10,
-        bottom: 40,
+        bottom: 8,
     },
     buttonTxt: {
         fontSize: 25,
@@ -160,6 +180,15 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
         color: "white",
+        fontWeight: "bold",
+    },
+    buttonTxt2: {
+        fontSize: 25,
+        margin: 10,
+        padding: 5,
+        alignItems: "center",
+        justifyContent: "center",
+        color: "#007AFF",
         fontWeight: "bold",
     },
     header: {

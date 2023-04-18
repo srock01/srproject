@@ -7,7 +7,7 @@
     "icon": "./assets/SL_APP_Icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/logo3.png",
+      "image": "./assets/SL_APP_Icon.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -28,6 +28,7 @@
     },
     "web": {
       "favicon": "./assets/logo.png"
-    }
+    },
+    "scheme":"srproject"
   }
 }

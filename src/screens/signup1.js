@@ -153,12 +153,13 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
         backgroundColor: "white",
-        marginTop: 45,
+        marginTop: 5,
     },
     image: {
         width: 300,
         height: 300,
         marginBottom: 50,
+        marginTop: 20,
         borderRadius: 25,
     },
 });

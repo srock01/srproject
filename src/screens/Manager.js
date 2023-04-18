@@ -1,66 +1,59 @@
-import React, { useState, useEffect } from "react";
-import {
-    View,
-    Text,
-    StyleSheet,
-    Image,
-    FlatList,
-    TouchableOpacity,
-    Button,
-} from "react-native";
-
+import React from 'react';
+import { useContext, useState, useEffect } from 'react';
+import { Button, View, Text, StyleSheet, Pressable, Image,TouchableOpacity, FlatList } from 'react-native';
 import { initializeApp } from "firebase/app";
+import { Context } from './context';
 import {
-    getDocs,
-    getFirestore,
-    collection,
-    firestore,
-    firebase,
-    addDoc,
-    get,
-    doc,
-    getDoc,
-    limit,
-    query,
-    where,
-    setDoc,
-    getDocFromCache,
-} from "firebase/firestore/lite";
-import { color } from "react-native-reanimated";
+  getDocs,
+  getFirestore,
+  collection,
+  query,
+  where,
+  onSnapshot,
+  firestore,
+  firebase,
+  addDoc,
+  get,
+  doc,
+  getDoc,
+  setDoc,
+  getDocFromCache
+} from "firebase/firestore";
+import { color } from 'react-native-reanimated';
 const firebaseConfig = {
-    apiKey: "AIzaSyB2FzOefuDJNQHq1QLNs0dZJ5nsSeq-JyA",
+  apiKey: "AIzaSyB2FzOefuDJNQHq1QLNs0dZJ5nsSeq-JyA",
     authDomain: "srproject-75728.firebaseapp.com",
     projectId: "srproject-75728",
     storageBucket: "srproject-75728.appspot.com",
     messagingSenderId: "920612695893",
     appId: "1:920612695893:web:dff9096bd171cca13709dc",
     measurementId: "G-Z5ZCFJCV52"
-  };
+};
 
 require("firebase/firestore");
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-export default function Closet({ navigation, navigation: { goBack }, route }) {
-    const [clothes, setClothes] = useState([]);
-    const { email, menu } = route.params;
-    
-    const fetchBlogs = async () => {
-        if(menu){
-            navigation.navigate("HomeMenu", {email:email})
-        }
-        console.log(email);
+export default function Home ({navigation, route}) {
+  const [clothes, setClothes] = useState([]);
+  const [clothes1, setClothes1] = useState([]);
+  const myContext = useContext(Context);
+  const email = myContext.email;    
+  const fetchBlogs = async () => {
+        
+        console.log(email+'fjds');
         const list = [];
+        const q=query(collection(db, "users", email, "teams"),where("isManager","==",true));
         if (email != null) {
-            const querySnapshot = await getDocs(
-                collection(db, "users", email, "clothes")
-            );
-
+          console.log("ghd");
+            const querySnapshot = await getDocs(q);
+            
             querySnapshot.forEach((doc) => {
+              
                 let myData = doc.data();
                 myData.id = doc.id;
-                myData.e = email;
+                
                 list.push({ ...myData });
                 // doc.data() is never undefined for query doc snapshots
                 console.log(doc.id, " => ", doc.data());
@@ -68,66 +61,76 @@ export default function Closet({ navigation, navigation: { goBack }, route }) {
             });
         }
     };
-
+    function fetchBlogs1(name,myContext)  {
+        myContext.setO(name);
+        let a ="Manage "+name;
+        navigation.navigate('Manage Organization',{name:a});
+      }
     useEffect(() => {
         fetchBlogs();
     }, []);
+    const fetchBlogs2 = async () => {
+        
+        const unsub = onSnapshot(doc(db, "users", email), (doc) => {
+            console.log("Current data: ", doc.data().organizationsOwned[0]);
+            setClothes1(doc.data().organizationsOwned)
+          });
+    };
+    useEffect(() => {
+        fetchBlogs2();
+    }, []);
     var str = "<";
     return (
-        <View style={{ flex: 1 }}>
-            <View style={[styles.bruh, { flexDirection: "row" }]}>
-                <Text style={styles.titleType}> Name </Text>
-                <Text style={styles.titleType}> Type </Text>
-                <Text style={styles.titleWeather}> Weather </Text>
-            </View>
+        <View style={{ flex: 1, backgroundColor:'#1C4BA5' }}>
+            
             <View
                 style={{
                     flex: 1,
                     paddingTop: 15,
-                    paddingBottom: 80,
+                    paddingBottom: 15,
                 }}
             >
+                <Text style={styles.buttonTxt}>MANAGE TEAMS</Text>
                 <FlatList
+                    style={{flex:1}}
                     data={clothes}
                     //   keyExtractor={item => item.id}
                     renderItem={({ item }) => (
                         <View style={styles.list}>
                             <TouchableOpacity
                                 style={styles.items}
-                                onPress={() =>
-                                    navigation.navigate("Article", {
-                                        name: item.name,
-                                        type: item.type,
-                                        weather: item.weather,
-                                        id: item.id,
-                                        e: item.e,
-                                    })
-                                }
+
                             >
                                 <View style={styles.budgetTagsContainer}>
                                     <Text style={styles.name}>{item.name}</Text>
-                                    <Text style={styles.type}>{item.type}</Text>
-                                    <Text style={styles.weather}>
-                                        {item.weather}
-                                    </Text>
                                 </View>
                             </TouchableOpacity>
                         </View>
                     )}
                 />
-            </View>
-            <View style={styles.button}>
-                <TouchableOpacity
-                    style={styles.buttonTO}
-                    onPress={() =>
-                        navigation.navigate("AddArticle", { email: email })
-                    }
-                >
-                    <View>
-                        <Text style={styles.buttonTxt}>ADD ARTICLE</Text>
-                    </View>
-                </TouchableOpacity>
-            </View>
+
+                <View style={{flex:1,paddingTop:15}}>
+                    <Text style={styles.buttonTxt}>MANAGE ORGANIZATIONS</Text>
+                    <FlatList
+                    style={{flex:1,paddingTop:15}}
+                    data={clothes1}
+                    //   keyExtractor={item => item.id}
+                    renderItem={({ item }) => (
+                        <View style={styles.list}>
+                            <TouchableOpacity
+                                style={styles.items}
+                                onPress={() => fetchBlogs1(item,myContext)} 
+
+                            >
+                                <View style={styles.budgetTagsContainer}>
+                                    <Text style={styles.name}>{item}</Text>
+                                </View>
+                            </TouchableOpacity>
+                        </View>
+                    )}
+                />
+            </View></View>
+            
         </View>
     );
 }
