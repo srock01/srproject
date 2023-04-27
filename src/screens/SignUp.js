@@ -32,6 +32,8 @@ const { height } = Dimensions.get("window");
 export default function SignUp() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [fName, setFName] = useState("");
+    const [lName, setLName] = useState("");
     return (
         <>
             <KeyboardAwareScrollView>
@@ -42,7 +44,26 @@ export default function SignUp() {
                         style={styles.image}
                         source={require("../../assets/logo2.jpeg")}
                     />
-
+                    <View style={styles.inputView}>
+                        <TextInput
+                            style={styles.TextInput}
+                            placeholder="First Name?"
+                            placeholderTextColor="#003f5c"
+                            onChangeText={(fName) =>
+                                setFName(fName)
+                            }
+                        />
+                    </View>
+                    <View style={styles.inputView}>
+                        <TextInput
+                            style={styles.TextInput}
+                            placeholder="Last Name?"
+                            placeholderTextColor="#003f5c"
+                            onChangeText={(lName) =>
+                                setLName(lName)
+                            }
+                        />
+                    </View>
                     <View style={styles.inputView}>
                         <TextInput
                             style={styles.TextInput}
@@ -76,8 +97,43 @@ export default function SignUp() {
     );
 }
 
-async function registerPress(email, password) {
-    try {
+async function registerPress() {
+    const [orgEmail, setOE] = useState("");
+    let at=false;
+    let dot=false;
+    if (email.length===0){
+        Alert.alert("No email", "Enter an eligible email address", [
+            
+            { text: "OK", onPress: () => console.log("OK Pressed") },
+        ]);
+    }
+    else if (fName.length===0){
+        Alert.alert("No First Name", "Enter a first name", [
+            
+            { text: "OK", onPress: () => console.log("OK Pressed") },
+        ]);
+    }
+    else if (lName.length===0){
+        Alert.alert("No Last Name", "Enter a last name", [
+            
+            { text: "OK", onPress: () => console.log("OK Pressed") },
+        ]);
+    }
+    else if (password.length===0){
+        Alert.alert("No Password", "Enter a password", [
+            
+            { text: "OK", onPress: () => console.log("OK Pressed") },
+        ]);
+    }
+    else{
+        try {
+        for (let i=0; i<email.length;i++){
+            if(email.charAt(i)==="@")
+                at=true;
+            if(email.charAt(i)==="."&&at) 
+                dot=true; 
+            
+        }
         let user = await getDoc(doc(db, "users", email));
         if (user.exists()) {
             Alert.alert("Sign Up Failure", "User already exists", [
@@ -89,16 +145,25 @@ async function registerPress(email, password) {
                 { text: "OK", onPress: () => console.log("OK Pressed") },
             ]);
             console.log("Creation Failed. User already exists");
-        } else {
+        }
+        else if (dot){
+            Alert.alert("Invalid email format", "Enter a valid email address", [
+                
+                { text: "OK", onPress: () => console.log("OK Pressed") },
+            ]);
+        } 
+        else {
             await setDoc(doc(db, "users", email), {
                 password: password,
+                fname:fName,
+                lNname:lName,
                 total: 0,
             });
             console.log("Account Created.");
         }
     } catch (e) {
         console.error("Error adding document: ", e);
-    }
+    }}
 }
 
 const styles = StyleSheet.create({

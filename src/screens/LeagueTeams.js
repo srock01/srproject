@@ -52,6 +52,8 @@ useLayoutEffect(() => {
  }, [])
   function fetchBlogs1(name,org,team,league,myContext)  {
     myContext.setT(name);
+    myContext.setTO(org);
+    myContext.setTL(league);
     navigation.navigate('OTeam',{
                 screen: 'About',
                 params:{name:name, org:org,team:team, b:b,league:league },});

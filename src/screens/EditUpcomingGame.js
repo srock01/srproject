@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext,useLayoutEffect } from "react";
 import { initializeApp } from "firebase/app";
 import { useFocusEffect } from '@react-navigation/native';
+
 import { Dropdown } from 'react-native-element-dropdown';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import * as ImagePicker from 'expo-image-picker';
@@ -8,7 +9,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Context } from "./context";
-import { getFirestore,Timestamp, doc, getDoc, setDoc, addDoc, updateDoc,arrayUnion,onSnapshot, query, collection, where, getDocs} from "firebase/firestore";
+import { getFirestore,Timestamp, doc, getDoc, setDoc, deleteDoc, updateDoc,arrayUnion,onSnapshot, query, collection, where, getDocs} from "firebase/firestore";
 global.Buffer = global.Buffer || require('buffer').Buffer
 import {
   StatusBar, ScrollView,
@@ -48,7 +49,7 @@ const db = getFirestore(app);
 const storage = getStorage(app);
 let a = 0;
 
-export default function GameAdd({route, navigation}) {
+export default function EditUpcomingGame({route, navigation, navigation:{goBack}}) {
   //var [ isPress, setIsPress ] = React.useState(false);
   const myContext=useContext(Context);
   const  email  = myContext.email;
@@ -58,6 +59,7 @@ export default function GameAdd({route, navigation}) {
     () => {  myContext.setEditing(true); }, 
     
     );
+  const {  item} = route.params;
   console.log(name+" "+org);
   
   const [c,setC]=useState(true);
@@ -67,6 +69,7 @@ export default function GameAdd({route, navigation}) {
   const [clothes,setClothes1]=useState([]);
   const [locations,setClothes]=useState([]);
 
+  
   const setTeams = async () => {
     let a =0;
     console.log(email+'fjds');
@@ -130,11 +133,24 @@ export default function GameAdd({route, navigation}) {
 
     }});
     setB2(true);
-};    
+};   
+const fetchBlogs9=async()=>{
+  const myDoc = doc(db, "organization", org, "games", item);
+  const user = await getDoc(myDoc);
+  const user1 = onSnapshot(myDoc,(doc)=>{
+    setHome(user.get("homeI"));
+    setHome1(user.get("home"));
+    setAway(user.get("awayI"));
+    setAway1(user.get("away"));
+    setLocal2(user.get("location"));
+    setDateRS(user.get("startDate").toDate());
+  });
+}; 
     
 useLayoutEffect(() => {
   fetchBlogs();
   setTeams();
+  fetchBlogs9();
 
  }, [])
  
@@ -243,7 +259,10 @@ useLayoutEffect(() => {
     console.log(away1+" jhghjkdfjkh");
   }, [away1]);
   
-  
+  async function deletePress() {
+    await deleteDoc(doc(db, "organization", org,"games",item)); 
+    navigation.goBack();   
+  }
 
   async function registerPress(myContext) {
     let cuh;
@@ -279,10 +298,8 @@ useLayoutEffect(() => {
       if(c2){
         cuh=clothes.url;
       }
-      
-      
-        await addDoc(collection(db, "organization", org,"games"), 
-        { league:name,location:location2,org:org, homeI:home, awayI:away, sport:sport, startDate:Timestamp.fromDate(dateRS), home:home1,homeL:home1.length, away:away1,awayL:away1.length, final:false,homeS:-1,awayS:-1 });
+        await setDoc(doc(db, "organization", org,"games",item), 
+        { league:name,location:location2,org:org, homeI:home, awayI:away, sport:sport, startDate:Timestamp.fromDate(dateRS), home:home1, away:away1,homeL:home1.length, awayL:away1.length,final:false,homeS:-1,awayS:-1 });
       
       
       if (c){
@@ -290,7 +307,7 @@ useLayoutEffect(() => {
       }
        console.log("clothing article added");
         const washingtonRef = doc(db, "organization", org);
-        navigation.goBack(); 
+
         // Atomically add a new region to the "regions" array field.
        /* await updateDoc(washingtonRef, {
            leagues: arrayUnion(a)
@@ -400,7 +417,7 @@ useLayoutEffect(() => {
         maxHeight={300}
         labelField="label"
         valueField="value"
-        placeholder="Select game location"
+        placeholder={location2.length!==0?location2:"Select game location"}
         searchPlaceholder="Search..."
         locations={locations}
         onChange={item => {
@@ -421,12 +438,20 @@ useLayoutEffect(() => {
           onChange={onChange}
         />
         </View>
+        <View style={{flex:1, flexDirection:"row"}}>
           <TouchableOpacity
             style={styles.loginBtn}
             onPress={() => registerPress(myContext)}
           >
-            <Text style={{fontWeight:'bold',color:"#007AFF", fontSize:30}}>ADD GAME</Text>
+            <Text style={{fontWeight:'bold',color:"#007AFF", fontSize:24}}>UPDATE GAME</Text>
           </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.loginBtn1}
+            onPress={() => deletePress()}
+          >
+            <Text style={{fontWeight:'bold',color:"red", fontSize:24}}>DELETE GAME</Text>
+          </TouchableOpacity>
+        </View>
         </View>
       </KeyboardAwareScrollView>
     </>
@@ -588,12 +613,22 @@ inputDate: {
     backgroundColor:"white"
   },
   loginBtn: {
-    width: "80%",
+    width: "48%",
     borderRadius: 25,
     height: 50,
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 10,
+    marginBottom: 3,
+    marginRight: 10,
+    backgroundColor: "white",
+  },
+  loginBtn1: {
+    width: "48%",
+    borderRadius: 25,
+    height: 50,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 3,
     backgroundColor: "white",
   },
   loginOr: {

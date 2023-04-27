@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, useLayoutEffect } from 'react'; 
-import { View, Text, StyleSheet, Image, Button, FlatList, Alert,TouchableOpacity,  } from 'react-native';
+import { View, Text, StyleSheet, Image, Button, FlatList, Alert,TouchableOpacity, ScrollView  } from 'react-native';
 import { initializeApp } from "firebase/app";
 import { useFocusEffect } from '@react-navigation/native';
 import { Context } from './context';
@@ -43,7 +43,7 @@ const db = getFirestore(app);
 export default function TeamsAbout({route, navigation, navigation: { goBack }}) {
   
   const myContext= useContext(Context)
-  const { name,org,team,b} = route.params;
+  const { name,org,team,b,league} = route.params;
   const e = myContext.email;
   async function registerPress() {
     if(b1===0){
@@ -94,14 +94,34 @@ export default function TeamsAbout({route, navigation, navigation: { goBack }}) 
     myContext.setD(false);
   }, []);
   useFocusEffect(
-    () => {  myContext.setT(name); }, 
+    () => {  myContext.setT(name);
+       }, 
     
     );
   
   console.log(name+" "+e+org);
 
   const [clothes, setClothes] = useState({});
-  
+  const [clothes1, setClothes1] = useState([]);
+  const [clothes2, setClothes2] = useState([]);
+  const fB = async () => {
+    let list1=[];
+    let q;
+    for(let j=0;j<clothes1.length;j++){
+      console.log(clothes1[j]);
+      if (clothes1[j]!==null) {
+        let user1 = await getDoc(doc(db, "users", clothes1[j]));
+        console.log("shit");
+        q = user1.get("fname")+" "+user1.get("lNname")
+        list1.push({value:q,id:clothes1[j]})}
+    }
+    console.log(list1);
+    setClothes2(list1);
+
+  }
+  useEffect(() => {
+    fB();
+  }, [clothes1]);
   const fetchBlogs=async()=>{
     console.log(org+" "+e+" "+org);
     const myDoc = doc(db, "organization", org, "teams", name)
@@ -114,6 +134,8 @@ export default function TeamsAbout({route, navigation, navigation: { goBack }}) 
     if (user.exists()){
       console.log(user.get("currentPlayer")+"  gggg   "+b);
       setClothes(user.data())
+      setClothes1(user.get("Players"));
+      console.log(user.get("Players"));
       if(user.get("currentPlayer")===user3.get("maxPlayer")){
         setB(1);
       }
@@ -139,7 +161,7 @@ useEffect(() => {
       <TouchableOpacity
         style={styles.buttonTO}
         onPress={() => registerPress()}>
-          <View>
+          <View >
             {b1===0?<Text style={styles.buttonTxt2}>REQUEST JOIN TEAM</Text>:
             <Text style={styles.buttonTxt2}>JOIN TEAM</Text>}
           </View>
@@ -150,7 +172,7 @@ useEffect(() => {
 }
 
   return (
-    
+    <ScrollView>
     <View style={{ flex: 1 }}>
       <View style={styles.bruh}>
         
@@ -159,21 +181,90 @@ useEffect(() => {
     </View>
       
   
-      <View style={{ flex: 1,paddingTop:15, paddingBottom: 80, height: 600}}>
-        <Text style={[styles.title2, {paddingHorizontal:40}]}>Name: {clothes.name} </Text>
-        <Image source={{ uri: clothes.url }} style={{ width: 200, height: 200 }} />
+      <View style={{ flex: 1,paddingTop:15, paddingBottom: 220, height: 200 }}>
+        <View style={{ justifyContent:"center", flexDirection:"row",flex:1,paddingBottom: 10, }}>
+          <Image source={{ uri: clothes.url }} style={{ width: 200, height: 200,borderRadius:100 }} />
+        </View>
       </View>
+      <View style={{alignItems:"center"}}>
+      <View style={{ flex: 1,paddingTop:0,height:48, paddingBottom: 0,backgroundColor: "white",flexDirection:"row",borderRadius:6,width:"90%", borderColor:"black",borderWidth: 1,justifyContent:"center",paddingLeft:0}}>
+
+        <Text style={[styles.title2, {paddingTop:0,paddingLeft:17}]}>Wins: {clothes.win} </Text>
+        <Text style={[styles.title2, {paddingTop:0,paddingLeft:17}]}>Losses: {clothes.loss} </Text>
+        <Text style={[styles.title2, {paddingTop:0,paddingLeft:17}]}>Ties: {clothes.tie} </Text>
+      </View>
+      </View>
+      <Text style={[styles.title2, {paddingTop:15,paddingHorizontal:0,textAlign:"center"}]}>Roster </Text>
+
+      <View style={{ flex: 1,paddingTop:5, paddingBottom: 20,}}>
+      
+            {clothes2.map(({value,id})=>{
+              return(
+          <View style={styles.list}>
+            <TouchableOpacity style={styles.items}
+               >
+               <View style={styles.budgetTagsContainer}>
+                <Text style={styles.name}>{value}</Text>
+                <Text style={styles.name1}>{id}</Text>
+              </View>
+            </TouchableOpacity>
+          </View>)})}
+          </View>
       <View style={styles.button}>
       {setName3()}
       </View>
     </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
+  budgetTagsContainer: {
+    width: "100%",
+    flexDirection: "row",
+    alignItems: "center",
+    borderBottomColor: "black",
+    borderRadius: 4,
+    backgroundColor: "gray",
+},
+  list: {
+    width: "100%",
+    flexDirection: "column",
+    paddingHorizontal: 10,
+    marginBottom: 10,
+},
   bruh: {
-    backgroundColor: 'blue',
+    backgroundColor: '#1C4BA5',
   },
+  items: {
+    borderColor: "black",
+    borderRadius: 4,
+    backgroundColor: "gray",
+},
+name: {
+    width: "40%",
+    fontWeight: "100",
+    color: "#333333",
+    fontSize: 15,
+    textAlign: "left",
+    borderColor: "black",
+    paddingLeft: 25,
+    fontWeight: "bold",
+    paddingTop: 5,
+    paddingBottom: 5,
+},
+name1: {
+  width: "50%",
+  fontWeight: "100",
+  color: "#333333",
+  fontSize: 15,
+  textAlign: "left",
+  borderColor: "black",
+  paddingLeft: 25,
+  fontWeight: "bold",
+  paddingTop: 5,
+  paddingBottom: 5,
+},
   buttonTxt2: {
     fontSize: 25,
     margin: 10,
@@ -198,6 +289,8 @@ buttonTO: {
   backgroundColor: "white",
   marginRight: 10,
   bottom: 8,
+  borderWidth:1,
+  borderColor:"black",
 },
   header: {
     display: 'flex',
@@ -217,8 +310,8 @@ buttonTO: {
     display: 'flex',
     justifyContent: 'right',
     alignItems: 'right',
-    fontWeight: '300',
-    fontSize: 26,
+    fontWeight: '600',
+    fontSize: 30,
     marginVertical: 10,
     color: 'white'
   },

@@ -203,11 +203,11 @@ export default function CreateTeam({route, navigation, navigation:{goBack}}) {
         }
         await addDoc(collection(db, "organization", org,"teams"), 
         { name:name,league:league,url:cuh,owner:email, 
-          currentPlayer:pe,coachO:p, aFA:pr, Players:[pq],org:org });
+          currentPlayer:pe,coachO:p, aFA:pr, Players:[pq],org:org, win:0, loss:0, tie:0 });
         console.log("clothing article added");
         await addDoc(collection(db, "users", email,"teams"), 
         { name:name,league:league,url:cuh, 
-          org:org,isManager:true});
+          org:org,isManager:true, win:0, loss:0, tie:0});
         const washingtonRef = doc(db, "organization", org,"league",league);
 
         // Atomically add a new region to the "regions" array field.

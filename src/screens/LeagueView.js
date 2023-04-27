@@ -244,27 +244,26 @@ useLayoutEffect(() => {
       <View style={styles.container}>
         <StatusBar style="auto" />
         
-        <View style={styles.inputView3}>
           
           
-          <Text style={styles.TextInput}>League Name: {name}</Text>
-        </View>
+          <Text style={styles.buttonTxt1}> {name}</Text>
         
         
-          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center',paddingTop:15}}>
+        
+          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center',paddingTop:5}}>
             {b1?<View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', flexDirection: 'row',paddingTop:15, paddingBottom:10}}>
               {image && <Image source={{ uri: image }} style={{ width: 200, height: 200, paddingTop:5,borderRadius:100 }} />}
               
           </View>:<View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', flexDirection: 'row',paddingTop:15, paddingBottom:10}}>
-              {image && <Image source={{ uri: image }} style={{ width: 175, height: 175, paddingBottom:10,borderRadius:100 }} />}
+              {image && <Image source={{ uri: image }} style={{ width: 160, height: 160, paddingBottom:10,borderRadius:100 }} />}
               
           </View>}
           
         </View>
-        <View style={styles.inputView2}>
+        <View style={styles.inputView4}>
             <TextInput
             keyboardType="numeric"
-            style={styles.TextInput2}
+            style={styles.TextInput}
             placeholder={sport2}
             editable={false}
             placeholderTextColor="black"
@@ -284,7 +283,8 @@ useLayoutEffect(() => {
         <View style={styles.inputView2}>
           <Text style={styles.TextInput}> {end}</Text>         
         </View>
-      
+        <Text style={styles.buttonTxt2}> Game Locations</Text>
+
       <ScrollView style={{height:20,width:'80%',flexDirection:"column", backgroundColor:"white",borderRadius:6}}>
         <View style={{ backgroundColor:"white",  }}>
         {location[0]===undefined?
@@ -293,7 +293,7 @@ useLayoutEffect(() => {
           </View>:location.map((myItem)=>{
           return(
             <View stle= {{flex:1,flexDirection:"row"}}>
-            <Text style={{fontSize:20,flex:1,fontWeight:'bold'}}>{myItem}</Text>
+            <Text style={{fontSize:20,flex:1,fontWeight:'bold',paddingTop:6}}>{myItem}</Text>
             
             </View>
           )
@@ -352,8 +352,24 @@ const styles = StyleSheet.create({
     fontSize:26,
     fontWeight:'bold'
   },
-  buttonTxt1:{
-  },
+  buttonTxt1: {
+    fontSize: 28,
+    marginTop: 20,
+    padding: 0,
+    alignItems: "center",
+    justifyContent: "center",
+    color: "white",
+    fontWeight: "bold",
+},
+buttonTxt2: {
+  fontSize: 28,
+  margin: 5,
+  padding: 0,
+  alignItems: "center",
+  justifyContent: "center",
+  color: "white",
+  fontWeight: "bold",
+},
   btnNormal: {
     borderColor:"red",
     borderWidth: 1,
@@ -410,6 +426,18 @@ const styles = StyleSheet.create({
     alignItems: "center",
     
   },
+  inputView4: {
+    flexDirection:"row",
+    backgroundColor: "white",
+    borderRadius: 30,
+    width: "45%",
+    height: 45,
+    marginTop:20,
+    marginBottom: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    
+  },
 
   TextInput: {
     height: 50,
@@ -417,6 +445,8 @@ const styles = StyleSheet.create({
     //fontWeight:"bold",
     padding: 15,
     fontSize:16,
+    textAlign:"center",
+    fontWeight:"bold"
   },
   TextInput3: {
     height: 50,
@@ -424,7 +454,7 @@ const styles = StyleSheet.create({
     //fontWeight:"bold",
     padding: 10,
     marginLeft: 20,
-    fontSize:16,
+    fontSize:18,
   },
   TextInput2: {
     height: 50,

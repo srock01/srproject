@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, useLayoutEffect } from 'react'; 
-import { View, Text, StyleSheet, Image, Button, FlatList, TouchableOpacity,TouchableWithoutFeedback,StatusBar,TextInput, ScrollView } from 'react-native';
+import { View, Text, Alert, StyleSheet, Image, Button, FlatList, TouchableOpacity,TouchableWithoutFeedback,StatusBar,TextInput, ScrollView } from 'react-native';
 import { initializeApp } from "firebase/app";
 import { Context } from './context';
 import { Dropdown } from 'react-native-element-dropdown';
@@ -93,7 +93,6 @@ export default function LeagueSettings({route, navigation, navigation: { goBack 
       console.log(user.get("name"));
       setClothes1(user.data())
       setImage(doc.data().url);
-      setName(doc.data().name);
       setLocal(doc.data().locations);
       setMaxPlayer(doc.data().maxPlayer);
       setMinPlayer(doc.data().minPlayer);
@@ -221,21 +220,41 @@ useLayoutEffect(() => {
       console.log(locations[i]+"1");
     }
     console.log(name+" "+name1)
-    try {
+    let user;
+    let bolt =true;
+
+    if(name1.length!==0){
+      user = await getDoc(doc(db,"organization", org,"league",name1));
+    if (user.exists()) {
+      bolt =false
+        Alert.alert("League Creation Failure", "League with this name exists. Choose a different one", [
+            { text: "OK", onPress: () => console.log("OK Pressed") },
+          ]);
+          console.log("Creation Failed. User already exists");
+      }} 
+      if(bolt) 
+    {
       if(c2){
         cuh=clothes.url;
       }
       let a =name1;
       console.log(name+" 445433"+name1)
-      if(name1.length===0){
-        a= name;
-        await setDoc(doc(db, "organization", org,"league",name), 
-        { name:name,locations:location,url:cuh,owner:email, minPlayer:player,maxPlayer:playerMax,maxTeam:teams,currentTeams:clothes.currentTeams, sport:sport, startDate:Timestamp.fromDate(dateS), endDate:Timestamp.fromDate(dateE),rsDate:dateRS, reDate:dateRE });
-      }
-      else{
-        await setDoc(doc(db, "organization", org,"league",name1), 
-        { name:name1,locations:location,url:cuh,owner:email, minPlayer:player,maxPlayer:playerMax,maxTeam:teams,currentTeams:clothes.currentTeams, sport:sport, startDate:Timestamp.fromDate(dateS), endDate:Timestamp.fromDate(dateE),rsDate:dateRS, reDate:dateRE });
-      }
+      if (teams<clothes.currentTeams){
+        Alert.alert("Current Teams Exceed Max","Change Max Teams or Leave Previous Value",  [
+          { text: "OK", onPress: console.log("bruhg") },
+        ]); 
+      }  
+      else{  
+        if(name1.length===0){
+          a= name;
+          await setDoc(doc(db, "organization", org,"league",name), 
+          { name:name,locations:location,url:cuh,owner:email, minPlayer:player,maxPlayer:playerMax,maxTeam:teams,currentTeams:clothes.currentTeams, sport:sport, startDate:Timestamp.fromDate(dateS), endDate:Timestamp.fromDate(dateE),rsDate:dateRS, reDate:dateRE });
+
+        }
+        else{
+          await setDoc(doc(db, "organization", org,"league",name1), 
+          { name:name1,locations:location,url:cuh,owner:email, minPlayer:player,maxPlayer:playerMax,maxTeam:teams,currentTeams:clothes.currentTeams, sport:sport, startDate:Timestamp.fromDate(dateS), endDate:Timestamp.fromDate(dateE),rsDate:dateRS, reDate:dateRE });
+        }
       if (c){
         setSport(clothes.sport)
       }
@@ -262,9 +281,7 @@ useLayoutEffect(() => {
       setMinP("Min Team Size: "+player)
       setC2(true)
        console.log(myContext.league+"hdsh")
-       navigation.navigate('Manage League',{name:"Manage "+a});
-    } catch (e) {
-      console.error("Error adding document: ", e);
+       navigation.navigate('Manage League',{name:"Manage "+a});}
     }
   }
 
@@ -356,8 +373,9 @@ useLayoutEffect(() => {
           {setName3}
           <TextInput
             style={styles.TextInput}
-            placeholder={"Current Name: "+name+" | Edit?"}
-            placeholderTextColor="#007AFF"
+            placeholder={"League Name: "+name}
+            editable={false}
+            placeholderTextColor="black"
             onChangeText={(name) => setName(name)}
           />
         </View>
@@ -448,7 +466,7 @@ useLayoutEffect(() => {
             style={styles.TextInput2}
             placeholder={maxT}
             placeholderTextColor="#007AFF"
-            onChangeText={(team) => setTeam(parseInt(team))}
+            onChangeText={(teams) => setTeam(parseInt(teams))}
           />
         </View>
         <View style={styles.inputView2}>
@@ -513,7 +531,7 @@ useLayoutEffect(() => {
             style={styles.loginBtn}
             onPress={() => registerPress(myContext)}
           >
-            <Text style={{fontWeight:'bold',color:"#007AFF"}}>CREATE LEAGUE</Text>
+            <Text style={{fontWeight:'bold',color:"#007AFF"}}>UPDATE LEAGUE</Text>
           </TouchableOpacity>
         </View>
       </KeyboardAwareScrollView>
@@ -623,7 +641,8 @@ inputDate: {
     //fontWeight:"bold",
     padding: 10,
     marginLeft: 20,
-    fontSize:16,
+    fontSize:24,
+    fontWeight:"bold"
   },
   TextInput3: {
     height: 50,
@@ -691,9 +710,11 @@ inputDate: {
   },
   placeholderStyle: {
     fontSize: 16,
+    color:"#007AFF"
   },
   selectedTextStyle: {
     fontSize: 16,
+    color:"#007AFF"
   },
   iconStyle: {
     width: 20,

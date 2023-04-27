@@ -38,6 +38,8 @@ import ManageLTeams from "./src/screens/ManageLTeams";
 import LeagueSettings from "./src/screens/LeagueSettings";
 
 import GameAdd from "./src/screens/GameAdd";
+import GameUEdit from "./src/screens/EditUpcomingGame";
+import GamePEdit from "./src/screens/EditPastGame";
 
 import Network3 from "./src/screens/NetworkChoose";
 import Network from "./src/screens/NetworkCreate";
@@ -63,6 +65,8 @@ const firebaseConfig = {
 
   
   const Manager = () => {
+    const myContext=useContext(Context);
+    let poo= myContext.editing;
     return (
     <Stack.Navigator>
       <Stack.Screen
@@ -83,7 +87,7 @@ const firebaseConfig = {
       <Stack.Screen
         name="Manage League"
         component={ManageLeague2}
-        options={({route})=>({ title: route.params.name,headerShown: true })}
+        options={({route})=>({ title: route.params.name,headerShown:poo?false:true })}
       />
       
     </Stack.Navigator>
@@ -169,19 +173,34 @@ const firebaseConfig = {
       <Stack.Screen
         name="Add Game"
         component={GameAdd}
-        options={{ headerShown: false }}
+        options={{ headerShown: true }}
+      />
+      <Stack.Screen
+        name="Edit Game"
+        component={GameUEdit}
+        options={{ headerShown: true }}
+      />
+      <Stack.Screen
+        name="Finalize Game"
+        component={GamePEdit}
+        options={{ headerShown: true }}
       />
       
     </Stack.Navigator>
   );
   }
   const ManageLeague2 = () => {
+    
+    const myContext=useContext(Context);
+    let poo= myContext.editing;
     return (
-        <Tab1.Navigator screenOptions={{
+        <Tab1.Navigator screenOptions={({ route }) => ({
+          tabBarVisible: poo? false:true,
           tabBarLabelStyle: { fontSize: 12, fontWeight:'bold' },
           tabBarItemStyle: { flex: 1 },
-          tabBarStyle: { backgroundColor: 'powderblue' },
-        }}>
+          tabBarStyle: poo?{display: 'none'}:{ backgroundColor: 'powderblue' },
+          
+        })}>
         
           <Tab1.Screen
             name="Manage Games"
@@ -199,23 +218,7 @@ const firebaseConfig = {
           </Tab1.Navigator>
           );
           }
-  const Managed = () => {
-    return (
-        <Tab1.Navigator screenOptions={{
-          tabBarLabelStyle: { fontSize: 12, fontWeight:'bold' },
-          tabBarItemStyle: { flex: 1 },
-          tabBarStyle: { backgroundColor: 'powderblue' },
-        }}>
-        
-          <Tab1.Screen
-            name="Managed"
-            component={Manager}
-            
-          />
-          
-          </Tab1.Navigator>
-          );
-          }
+
   const FirstScreenStack1 = () => {
     return (
         <Tab1.Navigator
@@ -325,13 +328,15 @@ const App = (route) => {
     const [o, setO] = React.useState("");
     const [league, setL] = React.useState("");
     const [uLeague, setUL] = React.useState("");
-
+    const [tO, setTO] = React.useState("");
+    const [tL, setTL] = React.useState("");
     const [nwork, setN] = React.useState("");
     let [hDraw, setD] =React.useState(true);
+    let [editing, setEditing] =React.useState(false);
     let [b, setB] =React.useState(boole.value);
     const userSetting = {boole:boole, 
-        setBoole ,email:email,setE,b:b,setB,team:team, setT,hDraw:hDraw, setD, 
-        league:league, setL,uLeague:uLeague, setUL, nwork:nwork, setN,o:o,setO,};
+        setBoole ,email:email,setE,b:b,setB,team:team, setT,hDraw:hDraw, setD, editing:editing,setEditing,
+        league:league, setL,uLeague:uLeague, setUL, nwork:nwork, setN,o:o,setO,tO:tO,setTO,tL:tL,setTL,};
     const [checking, setIsChecking] = React.useState(true);
     console.log(boole);
     console.log(b);

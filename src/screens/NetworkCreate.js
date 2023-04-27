@@ -90,6 +90,7 @@ export default function NetworkCreate({route, navigation}) {
       if (user1.exists()) {
         mom =user1.get("total")-1;
       } 
+
     try{
       await getDownloadURL(ref(storage, 'image/'+email+mom))
       
@@ -112,7 +113,27 @@ export default function NetworkCreate({route, navigation}) {
     for(let i=0;i<locations.length;i++){
       console.log(locations[i]+"1");
     }
-    try {
+    let user;
+    let bolt =true;
+
+    if(name.length===0){
+      Alert.alert("Network Creation Failure", "Enter a name", [
+        { text: "OK", onPress: () => console.log("OK Pressed") },
+      ]);
+      console.log("Creation Failed. User already exists");
+   
+    }
+    else{
+      user = await getDoc(doc(db,"organization", name));
+    if (user.exists()) {
+      bolt =false
+        Alert.alert("League Creation Failure", "League with this name exists. Choose a different one", [
+            { text: "OK", onPress: () => console.log("OK Pressed") },
+          ]);
+          console.log("Creation Failed. User already exists");
+      } 
+      else
+    {try {
         await setDoc(doc(db, "organization", name), 
         { name:name,locations:locations,url:cuh,owner:email });
         console.log("clothing article added");
@@ -125,7 +146,7 @@ export default function NetworkCreate({route, navigation}) {
         
     } catch (e) {
       console.error("Error adding document: ", e);
-    }
+    }}}
 
   }
   const [image, setImage] = useState(null);

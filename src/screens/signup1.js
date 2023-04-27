@@ -8,12 +8,17 @@ import {
     TextInput,
     Image,
     View,
+    Alert,
     TouchableOpacity,
     Dimensions,
 } from "react-native";
 
 import { Context  } from './context';
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import * as Google from 'expo-auth-session/providers/google';
+import * as WebBrowser from 'expo-web-browser';  
+  WebBrowser.maybeCompleteAuthSession();
+
 const firebaseConfig = {
     apiKey: "AIzaSyB2FzOefuDJNQHq1QLNs0dZJ5nsSeq-JyA",
     authDomain: "srproject-75728.firebaseapp.com",
@@ -33,9 +38,48 @@ let val;
 
 
 
-export default function SignUp() {
+export default function SignUp({navigation,navigation:{goBack}}) {
+    const [c, setC] = useState(false);
+    
+    const [accessToken, setAccessToken] = React.useState();
+    const [userInfo, setUserInfo] = React.useState([]);
+    const [message, setMessage] = React.useState();
+    
+    const [request, response, promptAsync] = Google.useAuthRequest({
+        expoClientId: "816172760104-betq1tlvsb56rhc5o0n4ofhvoba3mle1.apps.googleusercontent.com"
+      });
+
+    React.useEffect(() => {
+        setMessage(JSON.stringify(response));
+        if (response?.type === "success") {
+          setAccessToken(response.authentication.accessToken);
+          
+        }
+      }, [response]);
+    React.useEffect(() => {
+        getUserData();
+      }, [accessToken]);
+    async function getUserData() {
+        let userInfoResponse = await fetch("https://www.googleapis.com/userinfo/v2/me", {
+          headers: { Authorization: `Bearer ${accessToken}`}
+        });
+    
+        userInfoResponse.json().then(data => {
+          setUserInfo(data);
+          setC(true);
+         // console.log(userInfo.email)
+        });
+    }
+    React.useEffect(() => {
+        if (userInfo!==[])
+        setEmail(userInfo.email);
+        console.log(email);
+      }, [userInfo]);
+    
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [fName, setFName] = useState("");
+    const [lName, setLName] = useState("");
     return (
         <>
             <KeyboardAwareScrollView>
@@ -46,11 +90,42 @@ export default function SignUp() {
                         style={styles.image}
                         source={require("../../assets/SL_APP_Icon.png")}
                     />
-
+                    <View style={styles.inputView}>
+                
+                <TouchableOpacity 
+                    style={styles.inputView2}
+                    onPress={ () => { promptAsync({useProxy: true, showInRecents: true}) }}
+                > 
+                <Image 
+                style={styles.inputView2}
+                source={require("../../assets/b.jpeg")}
+                /></TouchableOpacity>
+                </View>
+                    <View style={styles.inputView}>
+                        <TextInput
+                            style={styles.TextInput}
+                            placeholder="First Name?"
+                            placeholderTextColor="#003f5c"
+                            onChangeText={(fName) =>
+                                setFName(fName)
+                            }
+                        />
+                    </View>
+                    <View style={styles.inputView}>
+                        <TextInput
+                            style={styles.TextInput}
+                            placeholder="Last Name?"
+                            placeholderTextColor="#003f5c"
+                            onChangeText={(lName) =>
+                                setLName(lName)
+                            }
+                        />
+                    </View>
                     <View style={styles.inputView}>
                         <TextInput
                             style={styles.TextInput}
                             placeholder="Email"
+                            defaultValue={accessToken?email:null}
                             placeholderTextColor="#003f5c"
                             onChangeText={(email) =>
                                 setEmail(email.toLowerCase())
@@ -70,7 +145,7 @@ export default function SignUp() {
 
                     <TouchableOpacity
                         style={styles.loginBtn}
-                        onPress={() => registerPress( email, password)}
+                        onPress={() => registerPress( email, password,fName,lName,navigation)}
                     >
                         <Text style={styles.registerText}>REGISTER</Text>
                     </TouchableOpacity>
@@ -80,8 +155,42 @@ export default function SignUp() {
     );
 }
 
-async function registerPress(email, password) {
-    try {
+async function registerPress(email, password,fName,lName,navigation) {
+    console.log(height);
+    let at=false;
+    let dot=false;
+    if (email.length===0){
+        Alert.alert("No email", "Enter an eligible email address", [
+            
+            { text: "OK", onPress: () => console.log("OK Pressed") },
+        ]);
+    }
+    else if (fName.length===0){
+        Alert.alert("No First Name", "Enter a first name", [
+            
+            { text: "OK", onPress: () => console.log("OK Pressed") },
+        ]);
+    }
+    else if (lName.length===0){
+        Alert.alert("No Last Name", "Enter a last name", [
+            
+            { text: "OK", onPress: () => console.log("OK Pressed") },
+        ]);
+    }
+    else if (password.length===0){
+        Alert.alert("No Password", "Enter a password", [
+            
+            { text: "OK", onPress: () => console.log("OK Pressed") },
+        ]);
+    }
+    else{
+        try {
+        for (let i=0; i<email.length;i++){
+            if(email.charAt(i)==="@")
+                at=true;
+            if(email.charAt(i)==="."&&at) 
+                dot=true; 
+        }
         let user = await getDoc(doc(db, "users", email));
         if (user.exists()) {
             Alert.alert("Sign Up Failure", "User already exists", [
@@ -93,16 +202,26 @@ async function registerPress(email, password) {
                 { text: "OK", onPress: () => console.log("OK Pressed") },
             ]);
             console.log("Creation Failed. User already exists");
-        } else {
+        }
+        else if (!dot){
+            Alert.alert("Invalid email format", "Enter a valid email address", [
+                
+                { text: "OK", onPress: () => console.log("OK Pressed") },
+            ]);
+        } 
+        else {
             await setDoc(doc(db, "users", email), {
                 password: password,
+                fname:fName,
+                lNname:lName,
                 total: 0,
             });
             console.log("Account Created.");
+            navigation.goBack();
         }
     } catch (e) {
         console.error("Error adding document: ", e);
-    }
+    }}
 }
 
 const styles = StyleSheet.create({
@@ -114,7 +233,7 @@ const styles = StyleSheet.create({
         borderRadius: 0,
         borderColor: "#1C4BA5",
         paddingBottom: "17%",
-        height: height,
+        height: 800,
     },
 
     inputView: {
@@ -124,6 +243,15 @@ const styles = StyleSheet.create({
         height: 45,
         marginBottom: 20,
         alignItems: "center",
+    },
+    inputView2: {
+        backgroundColor: "white",
+        borderRadius: 30,
+        width: "100%",
+        height: 45,
+        marginBottom: 20,
+        alignItems: "center",
+        
     },
 
     TextInput: {

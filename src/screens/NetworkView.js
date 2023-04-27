@@ -38,7 +38,7 @@ const db = getFirestore(app);
 
 export default function NetworkView ({navigation, route}) {
   const [clothes, setClothes] = useState([]);
-  let list = [];
+  
   const myContext = useContext(Context);
   const email = myContext.email;  
   const org = myContext.nwork;
@@ -54,10 +54,20 @@ export default function NetworkView ({navigation, route}) {
   const fetchBlogs = async () => {
     
     console.log(email+'fjds');
-    const unsub = onSnapshot(doc(db, "organization", org), (doc) => {
-      console.log("Current dat12a: ", doc.data().leagues[0]);
-      setClothes(doc.data().leagues)
-    });
+    const q = collection(db, "organization", org,"league");
+    const list = [];
+    const querySnapshot = await getDocs(q);
+            
+            querySnapshot.forEach((doc) => {
+              
+                let myData = doc.data();
+                myData.id = doc.id;
+                
+                list.push({ ...myData });
+                // doc.data() is never undefined for query doc snapshots
+                console.log(doc.id, " => ", doc.data());
+                setClothes(list);
+            });
     //const q=query(collection(db, "users", email, "networks"));
     /*const washingtonRef = await getDoc(doc(db, "users", email));
     list=washingtonRef.get("organizationsOwned");
@@ -95,9 +105,10 @@ useEffect(() => {
           renderItem={({ item }) => (
           <View style={styles.list}>
             <TouchableOpacity style={styles.items}
-              onPress={() => fetchBlogs1(item,myContext)} >
+              onPress={() => fetchBlogs1(item.id,myContext)} >
                <View style={styles.budgetTagsContainer}>
-                <Text style={styles.name}>{item}</Text>
+                <Text style={styles.name}>{item.name}</Text>
+                <Text style={styles.name}>Sport: {item.sport}</Text>
               </View>
             </TouchableOpacity>
           </View>)}/>
@@ -129,7 +140,7 @@ items: {
     backgroundColor: "gray",
 },
 name: {
-    width: "40%",
+    width: "47%",
     flexDirection: "row",
     alignItems: "center",
     fontWeight: "100",

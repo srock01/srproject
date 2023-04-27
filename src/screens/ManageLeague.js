@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useContext, useLayoutEffect } from 'react'; 
 import { View, Text, StyleSheet, Image, Button, FlatList, TouchableOpacity } from 'react-native';
 import { initializeApp } from "firebase/app";
+import { useFocusEffect } from '@react-navigation/native';
+
 import { Context } from './context';
 
 import {
@@ -9,7 +11,7 @@ import {
   collection,
   firestore,
   firebase,
-  addDoc,
+  Timestamp,
   get,
   doc,
   getDoc,
@@ -37,23 +39,33 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 export default function ManageLeague({route, navigation, navigation: { goBack }}) {
-  
+  useFocusEffect(
+    () => {  myContext.setEditing(false); }, 
+    
+    );
   const myContext= useContext(Context)
   const org = myContext.o;
   const email = myContext.email;  
   const name =myContext.league;
   const [clothes, setClothes] = useState([]);
+  const [clothes2, setClothes2] = useState([]);
+
   console.log(org);
-  function fetchBlogs1(name,myContext)  {
-    console.log(name+'fjk');
-    myContext.setL(name);
-    navigation.navigate('Manage League',{name:"Manage "+name});
+  function fetchBlogs1(item,myContext)  {
+    
+    
+    navigation.navigate('Edit Game',{item:item.id});
+  }
+  function fetchBlogs4(item,homeI,awayI,homeL,awayL,myContext)  {
+    
+    
+    navigation.navigate('Finalize Game',{item:item.id,homeI:homeI,awayI:awayI, hL:homeL,aL:awayL});
   }
   const fetchBlogs = async () => {
         
     console.log(email+'fjds');
     let list = [];
-    const q=query(collection(db, "organization", org, "games"),where("league","==",name));
+    const q=query(collection(db, "organization", org, "games"), where("league","==",name), where("startDate","<",Timestamp.fromDate(new Date())));
     if (email != null) {
       console.log("ghd");
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
@@ -90,9 +102,50 @@ export default function ManageLeague({route, navigation, navigation: { goBack }}
 
     }
 };
+const fetchBlogs2 = async () => {
+        
+  console.log(email+'fjds');
+  let list = [];
+  const q=query(collection(db, "organization", org, "games"),where("league","==",name), where("startDate",">",Timestamp.fromDate(new Date())));
+  if (email != null) {
+    console.log("ghd");
+      const unsubscribe = onSnapshot(q, (querySnapshot) => {
+          list=[];
+          let a= true;
+      querySnapshot.forEach((doc) => {
+          
+          let po=true;
+          
+          
+          
+          let myData = doc.data();
+          myData.id = doc.id;
+          console.log(!querySnapshot.metadata.fromCache+"hjghjdhj  ")
+          
+        //  if(change.type === "removed"){
+             /* console.log(change.type);
+              const index = array.indexOf(change.doc.id);
+              if (index > -1)  // only splice array when item is found
+                  array.splice(index, 1); // 2nd parameter means remove one item only
+      //   }*/
+        //  if(change.type === "added"){
+             // console.log(change.type);
+              list.push({ ...myData });
+          // doc.data() is never undefined for query doc snapshots
+        //  console.log(change.doc.id, " => ", change.doc.data());
+          setClothes2(list);//}
+          
+          
+         
+      });
+      
+  });
 
+  }
+};
 useEffect(() => {
     fetchBlogs();
+    fetchBlogs2();
 }, []);
 
   const [value, setValue] = useState(null);
@@ -101,9 +154,26 @@ useEffect(() => {
     <View style={{flex:1, backgroundColor:"#1C4BA5"}}>
       
       <View style={{flex: 1,paddingBottom: 10, }}>
-      <Text style={styles.buttonTxt1}>LEAGUE GAMES</Text>
+      <Text style={styles.buttonTxt1}>PAST LEAGUE GAMES</Text>
         <FlatList
           data={clothes}
+          //   keyExtractor={item => item.id}
+          renderItem={({ item }) => (
+          <View style={styles.list}>
+            <TouchableOpacity style={styles.items}
+              onPress={() => fetchBlogs4(item,item.homeI,item.awayI,item.homeL,item.awayL,myContext)} >
+               <View style={styles.budgetTagsContainer}>
+                <Text style={styles.name1}>{item.home}</Text>
+                <Text style={styles.name}>VS</Text>
+                <Text style={styles.name}>{item.away}</Text>
+              </View>
+            </TouchableOpacity>
+          </View>)}/>
+      </View>
+      <View style={{flex: 1,paddingBottom: 10, }}>
+      <Text style={styles.buttonTxt1}>UPCOMING LEAGUE GAMES</Text>
+        <FlatList
+          data={clothes2}
           //   keyExtractor={item => item.id}
           renderItem={({ item }) => (
           <View style={styles.list}>
@@ -196,14 +266,14 @@ name1: {
     flex: 'center',
     flexDirection:"row",
     width:"100%",
-    alignItems: 'center',
+    justifyContent: 'center',
   },
   buttonTO: {
       borderColor: "black",
       borderRadius: 50,
       backgroundColor: "white",
-      marginLeft: "20%",
       bottom: 10,
+      width:"90%",
 
   },
   buttonTxt: {
@@ -211,7 +281,7 @@ name1: {
       margin: 10,
       padding: 5,
       
-      alignItems: "center",
+      textAlign: 'center',
       justifyContent: "center",
       color: "#007AFF",
       fontWeight: "bold",

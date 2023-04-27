@@ -41,7 +41,7 @@ const db = getFirestore(app);
 let b =false;
 
 
-export default function LogIn({ navigation }) {
+export default function LogIn({ navigation, navigation:{goBack} }) {
     const [c, setC] = useState(false);
     const [accessToken, setAccessToken] = React.useState();
     const [userInfo, setUserInfo] = React.useState();
@@ -58,6 +58,10 @@ export default function LogIn({ navigation }) {
         
       }
     }, [response]);
+
+    React.useEffect(() => {
+        getUserData();
+      }, [accessToken]);
     
 
     
@@ -84,6 +88,7 @@ export default function LogIn({ navigation }) {
     console.log(userInfo.email+"jgkhsjkhdhjk");
     let user = await getDoc(doc(db, "users", userInfo.email));
     if (user.exists()) {
+
         //setPassword(await user.get("password"));
             //login to homepage
             
@@ -97,8 +102,17 @@ export default function LogIn({ navigation }) {
             }
 
            // navigation.navigate("Home", { email: email });
-            
-        
+         
+    }
+    else{
+        Alert.alert("Login Failure", "User does not exist", [
+            {
+                text: "Retry",
+                onPress: () => navigation.goBack(),
+                style: "cancel",
+            },
+        ]);
+        console.log("Incorrect password.");
     }
      
     }
@@ -133,17 +147,17 @@ export default function LogIn({ navigation }) {
                 
                 <TouchableOpacity 
                 style={styles.inputView2}
-                onPress={accessToken ? bruh2 : () => { promptAsync({useProxy: true, showInRecents: true}) }}
+                onPress={ () => { promptAsync({useProxy: true, showInRecents: true}) }}
                 > 
                 <Image 
                 style={styles.inputView2}
-                source={accessToken ?require("../../assets/c.jpeg"):require("../../assets/b.jpeg")}
+                source={require("../../assets/b.jpeg")}
                 /></TouchableOpacity>
                 </View>
                     <View style={styles.inputView}>
                         <TextInput
                             style={styles.TextInput}
-                            placeholder={c? userInfo.email:"Email"}
+                            placeholder={accessToken? userInfo.email:"Email"}
                             placeholderTextColor="#003f5c"
                             keyboardType="email-address"
                             onChangeText={(email) =>
@@ -154,8 +168,8 @@ export default function LogIn({ navigation }) {
 
                     <View style={styles.inputView}>
                         <TextInput
-                            style={c?[{fontSize:20},{fontWeight:'bold'},styles.TextInput]:styles.TextInput}
-                            placeholder={c? "•••••":"Password"}
+                            style={accessToken?[{fontSize:20},{fontWeight:'bold'},styles.TextInput]:styles.TextInput}
+                            placeholder={accessToken? "•••••":"Password"}
                             placeholderTextColor="#003f5c"
                             secureTextEntry={true}
                             onChangeText={(password) => setPassword(password)}

@@ -8,7 +8,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Context } from "./context";
-import { getFirestore,Timestamp, doc, getDoc, setDoc, addDoc, updateDoc,arrayUnion,onSnapshot, query, collection, where, getDocs} from "firebase/firestore";
+import { getFirestore,Timestamp, doc,increment, getDoc, setDoc, deleteDoc, updateDoc,arrayUnion,onSnapshot, query, collection, where, getDocs} from "firebase/firestore";
 global.Buffer = global.Buffer || require('buffer').Buffer
 import {
   StatusBar, ScrollView,
@@ -48,7 +48,7 @@ const db = getFirestore(app);
 const storage = getStorage(app);
 let a = 0;
 
-export default function GameAdd({route, navigation}) {
+export default function EditPastGame({route, navigation, navigation:{goBack}}) {
   //var [ isPress, setIsPress ] = React.useState(false);
   const myContext=useContext(Context);
   const  email  = myContext.email;
@@ -58,6 +58,7 @@ export default function GameAdd({route, navigation}) {
     () => {  myContext.setEditing(true); }, 
     
     );
+  const {  item, homeI,awayI,hL,aL} = route.params;
   console.log(name+" "+org);
   
   const [c,setC]=useState(true);
@@ -66,7 +67,9 @@ export default function GameAdd({route, navigation}) {
   const [clothes3,setClothes3]=useState([]);
   const [clothes,setClothes1]=useState([]);
   const [locations,setClothes]=useState([]);
-
+  const [clothes5,setClothes5]=useState([]);
+  const [clothes6,setClothes6]=useState([]);
+  
   const setTeams = async () => {
     let a =0;
     console.log(email+'fjds');
@@ -113,7 +116,6 @@ export default function GameAdd({route, navigation}) {
       console.log(user.get("name")+"hufuhudshud");
       console.log(user.get("name"));
       setClothes1(user.data())
-      setName(doc.data().name);
       setLocal(doc.data().locations);
       setMaxPlayer(doc.data().maxPlayer);
       setMinPlayer(doc.data().minPlayer);
@@ -126,18 +128,78 @@ export default function GameAdd({route, navigation}) {
       setEnd(doc.data().endDate.toDate())
       if(c)
         setSport(doc.data().sport)
-      console.log(name1+"jsdhdf");
+      console.log("jsdhdf");
 
     }});
     setB2(true);
-};    
+};   
+const [finale, setFin]=useState(false);
+const [shirt, setShirt]=useState();
+const [shirt2, setShirt2]=useState();
+const [shirt1, setShirt1]=useState(true);
+const fetchBlogs9=async()=>{
+  const myDoc = doc(db, "organization", org, "games", item);
+  const user = await getDoc(myDoc);
+  const user1 = onSnapshot(myDoc,(doc)=>{
+    setShirt(user.data().homeS);
+    setShirt2(user.data().awayS);
+    if(user.data().homeS===-1)
+      setShirt1(false)
+    if(user.data().final)
+      setFin(true)
+    setHome(user.get("homeI"));
+    setHome1(user.get("home"));
+    setAway(user.get("awayI"));
+    setAway1(user.get("away"));
+    setLocal2(user.get("location"));
+    setDateRS(user.get("startDate").toDate());
+    setHomeS1(user.get("homeS").toString());
+    setAwayS1(user.get("awayS").toString());
+  });
+}; 
     
 useLayoutEffect(() => {
   fetchBlogs();
   setTeams();
+  fetchBlogs9();
 
  }, [])
- 
+ const [image, setImage] = 
+ useState("https://firebasestorage.googleapis.com/v0/b/srproject-75728.appspot.com/o/pfp?alt=media&token=08061401-3b08-44df-9cb7-d88bf6f53e87");
+ const [q, setQ] = 
+ useState(0)
+
+ const homeInfo=async()=>{
+  const myDoc = doc(db, "organization", org, "teams", homeI);
+  const user = await getDoc(myDoc);
+  console.log(" gfd\n")
+  console.log(user.get("url")+"\nballs")
+  const user1 = onSnapshot(myDoc,(doc)=>{
+    setClothes5(user.data());
+    console.log(user.data().name.length+"\n cock");
+    
+    console.log(user.data()+"  \n ffortnite");
+  });
+  setImage(user.get("url"));
+  
+}; 
+
+ useEffect(() => {
+  homeInfo();
+}, []);
+const awayInfo=async()=>{
+  const myDoc = doc(db, "organization", org, "teams", awayI);
+  const user = await getDoc(myDoc);
+  const user1 = onSnapshot(myDoc,(doc)=>{
+    setClothes6(user.data());
+  });
+}; 
+
+ useEffect(() => {
+  awayInfo();
+}, []);
+
+  const [prl, setPRL] = useState("");
   let arr=[];
   const [start, setStart] = useState("");
   const [startR, setStartR] = useState("");
@@ -146,13 +208,16 @@ useLayoutEffect(() => {
   const [location,setLocal]=useState([]);
   const [location2,setLocal2]=useState("");
   const [teams,setTeam]=useState(1);
-  const [name1, setName] = useState("");
+  const [homeS1, setHomeS1] = useState("         483834u9   ");
+  const [awayS1, setAwayS1] = useState("          009i09  ");
   const [playerMax,setMaxPlayer]=useState(1);
   const [player,setMinPlayer]=useState(1);
   const [b1,setB1]=useState(false);
   const [b2,setB2]=useState(true);
   const [home,setHome]=useState("");
   const [away,setAway]=useState("");
+  const [home2,setHome2]=useState("");
+  const [away2,setAway2]=useState("");
   const [home1,setHome1]=useState();
   const [away1,setAway1]=useState();
   const [weather, setWeather] = useState("");
@@ -214,7 +279,7 @@ useLayoutEffect(() => {
             let myData = doc.data();
             myData.id = doc.id;
             myData.value=a;
-            
+            console.log(aL+"\n penisA ");
             if (home!==myData.id){
               if(away===myData.id){
                 console.log(away+" penisA "+myData.value);
@@ -243,7 +308,47 @@ useLayoutEffect(() => {
     console.log(away1+" jhghjkdfjkh");
   }, [away1]);
   
-  
+  async function deletePress() {
+    await deleteDoc(doc(db, "organization", org,"games",item)); 
+    
+    if (finale){
+      let washingtonRef;
+       let washingtonRefL;
+       let qtp= true;
+       if(shirt>shirt2){
+         washingtonRef = doc(db, "organization", org, "teams",home);
+         washingtonRefL= doc(db, "organization", org, "teams",away);
+        
+        }
+        else if (shirt===shirt2){
+          washingtonRefL = doc(db, "organization", org, "teams",home);
+          washingtonRef= doc(db, "organization", org, "teams",away);
+          qtp=false;
+        }
+        else if(shirt<shirt2){
+          washingtonRefL = doc(db, "organization", org, "teams",home);
+          washingtonRef= doc(db, "organization", org, "teams",away);
+         }
+         
+        // Atomically add a new region to the "regions" array field.
+       if (qtp) {
+          await updateDoc(washingtonRef, {
+            win: increment(-1)
+          });
+          await updateDoc(washingtonRefL, {
+            loss: increment(-1)
+        });}
+        else{
+          await updateDoc(washingtonRef, {
+            tie: increment(-1)
+          });
+          await updateDoc(washingtonRefL, {
+            tie: increment(-1)
+          });
+        }
+    }
+    navigation.goBack();   
+  }
 
   async function registerPress(myContext) {
     let cuh;
@@ -274,52 +379,101 @@ useLayoutEffect(() => {
     for(let i=0;i<locations.length;i++){
       console.log(locations[i]+"1");
     }
-    console.log(name+" "+name1)
+    console.log(name+" ")
+    let hS =parseInt(homeS1);
+    let aS =parseInt(awayS1);
+    
     try {
       if(c2){
         cuh=clothes.url;
       }
       
       
-        await addDoc(collection(db, "organization", org,"games"), 
-        { league:name,location:location2,org:org, homeI:home, awayI:away, sport:sport, startDate:Timestamp.fromDate(dateRS), home:home1,homeL:home1.length, away:away1,awayL:away1.length, final:false,homeS:-1,awayS:-1 });
+        await setDoc(doc(db, "organization", org,"games",item), 
+        { league:name,location:location2,org:org, homeI:home, awayI:away, sport:sport, startDate:Timestamp.fromDate(dateRS), home:home1, away:away1, homeS:hS,awayS:aS,homeL:hL,awayL:aL,final:true });
       
       
       if (c){
         setSport(clothes.sport)
       }
        console.log("clothing article added");
-        const washingtonRef = doc(db, "organization", org);
-        navigation.goBack(); 
+       let washingtonRef;
+       let washingtonRefL;
+       let qtp= true;
+       let hDub =false;
+       let hTie=false;
+       if (shirt>shirt2)
+        hDub=true;
+        if (shirt===shirt2)
+        hTie=true;
+       if(hS>aS){
+         washingtonRef = doc(db, "organization", org, "teams",home);
+         washingtonRefL= doc(db, "organization", org, "teams",away);
+         
+        }
+        else if(hS<aS){
+          washingtonRefL = doc(db, "organization", org, "teams",home);
+          washingtonRef= doc(db, "organization", org, "teams",away);
+         }
+         else if(hS===aS){
+          washingtonRefL = doc(db, "organization", org, "teams",home);
+          washingtonRef= doc(db, "organization", org, "teams",away);
+          qtp=false;
+        }
         // Atomically add a new region to the "regions" array field.
-       /* await updateDoc(washingtonRef, {
-           leagues: arrayUnion(a)
-        });
-      if(name!==name1&&a===name1){
-        await updateDoc(washingtonRef, {
-          leagues: arrayRemove(name)
-       });
-       
-       await deleteDoc(doc(db, "organization", org,"league",name));
-       }
-       myContext.setL(a);
-       setB2(false);
-       setSport2("Current Sport: "+ sport)
-
-      setMaxT("Team Limit: "+teams)
-      setMaxP("Max Team Size: "+playerMax)
-      setMinP("Min Team Size: "+player)
-      setC2(true)
-       console.log(myContext.league+"hdsh")
-       navigation.navigate('Manage League',{name:"Manage "+a});
-      */} catch (e) {
+       if (qtp) {
+          await updateDoc(washingtonRef, {
+            win: increment(1)
+          });
+          await updateDoc(washingtonRefL, {
+            loss: increment(1)
+        });}
+        else{
+          await updateDoc(washingtonRef, {
+            tie: increment(1)
+          });
+          await updateDoc(washingtonRefL, {
+            tie: increment(1)
+          });
+        }
+        if (finale){
+          washingtonRef = doc(db, "organization", org, "teams",home);
+          washingtonRefL= doc(db, "organization", org, "teams",away)
+          if(hTie){
+            await updateDoc(washingtonRef, {
+              tie: increment(-1)
+            });
+            await updateDoc(washingtonRefL, {
+              tie: increment(-1)
+            });
+          }
+          else if(hDub){
+            await updateDoc(washingtonRef, {
+              win: increment(-1)
+            });
+            await updateDoc(washingtonRefL, {
+              loss: increment(-1)
+          });
+          }
+          else{
+            await updateDoc(washingtonRef, {
+              loss: increment(-1)
+            });
+            await updateDoc(washingtonRefL, {
+              win: increment(-1)
+          });
+          }
+        }
+        navigation.goBack();  
+        } catch (e) {
       console.error("Error adding document: ", e);
     }
+
   }
 
   
   function setName3(){
-    if(name!==name1){
+    if(name!==name){
     return(
       <View >
         <Text style={styles.TextInput3}>Current: {name}</Text>
@@ -331,7 +485,10 @@ useLayoutEffect(() => {
     const currentDate = selectedDate;
     setDateRS(new Date(currentDate));
   };
-  
+  let poo="(";
+  /*
+  */
+  let poo1=")";
   return (
     <>
     <KeyboardAwareScrollView
@@ -339,55 +496,85 @@ useLayoutEffect(() => {
 
       <View style={styles.container}>
         <StatusBar style="auto" />
+      <View style={{flex:1,padding:15,marginBottom:100}}>
+      <View style={{   flexDirection:"row", }}>
+          < View style={{flex:1, }}>
+            <Text style={styles.buttonTxt9}>Home Team</Text>        
+          </View> 
+          < View style={{flex:1,}}>
+            <Text style={styles.buttonTxt19}>Away Team</Text> 
+          </View>
+        </View>
+        <View style={{   flexDirection:"row", }}>
+          < View style={{paddingLeft:hL===undefined?0:50-(6*hL),flex:1, }}>
+            <Text style={styles.buttonTxt5}>{clothes5.name}</Text>        
+          </View> 
+          < View style={{flex:1,paddingLeft:aL===undefined?0:166-(10*(aL)),}}>
+            <Text style={styles.buttonTxt6}>{clothes6.name}</Text> 
+          </View>
+        </View>
+        <View style={{   flexDirection:"row", }}>
+          < View style={{ marginRight:"40%", marginLeft:"4%",}}>
+            <Text style={styles.buttonTxt3}>{poo}{clothes5.win}-{clothes5.loss}-{clothes5.tie}{poo1}</Text>        
+          </View> 
+          < View style={{marginRight:"0%",marginLeft:"0%",}}>
+          <Text style={styles.buttonTxt3}>{poo}{clothes6.win}-{clothes6.loss}-{clothes6.tie}{poo1}</Text>        
+          </View>
+        </View>
+      
+
+      <View style={{  flexDirection:"row",flex:1,padding:10 }}>
+       < View style={{flex:1, marginRight:"35%", marginLeft:"-6%",}}>
+        <Image source={{ uri: clothes5.url }} style={{ width: 125, height: 125, borderRadius:100,  }} />
+        </View> 
+        < View style={{flex:1,marginRight:"0%",marginLeft:"0%"}}>
+        <Image source={{ uri: clothes6.url }} style={{ width: 125, height: 125, borderRadius:100, }} />
+        </View>
+      </View>
+      <View >
+         
+          < View style={{paddingTop:120,paddingLeft:100}}>
+            <Text style={styles.buttonTxt3}>Final Score</Text> 
+          </View>
+        </View>
+      
+      <View >
+      <View style={{  flexDirection:"row",flex:1,padding:10,paddingBottom:5 }}>
+       < View style={{flex:1, marginRight:"0%", marginLeft:"-2%",}}>
+        <View style={styles.inputView2}>
+        <TextInput
+            keyboardType="numeric"
+            style={styles.TextInput2}
+            placeholder={!shirt1?"Enter H Total":"Home: "+shirt} 
+            placeholderTextColor="#007AFF"
+            onChangeText={(homeS1) => setHomeS1(homeS1)}
+          />
+            
+        </View>        
+        </View> 
+       
+        < View style={{flex:1,marginRight:"-15%",marginLeft:"15%", }}>
+          <View style={styles.inputView2}> 
+            <TextInput
+              keyboardType="numeric"
+              style={styles.TextInput2}
+              placeholder={!shirt1?"Enter A Total":"Away: "+shirt2} 
+              placeholderTextColor="#007AFF"
+              onChangeText={(awayS1) => setAwayS1(awayS1)}
+            />
+          </View>
+        </View>
+      </View>
+         
+          < View style={{flex:1,paddingLeft:140,paddingBottom:20}}>
+            <Text style={styles.buttonTxt3}>AT</Text> 
+          </View>
+        </View>
+      
+      </View>
         
-        
-      <Text style={styles.buttonTxt1}>Home Team</Text>
-      <Dropdown
-        style={styles.dropdown}
-        placeholderStyle={styles.placeholderStyle}
-        selectedTextStyle={styles.selectedTextStyle}
-        inputSearchStyle={styles.inputSearchStyle}
-        iconStyle={styles.iconStyle}
-        data={clothes2}
-        search
-        maxHeight={300}
-        labelField="name"
-        valueField="value"
-        placeholder= {home===""?"Select Home" :home1}        
-        searchPlaceholder="Search..."
-        teams={clothes2}
-        onChange={item => {
-          setHome(item.id);
-          
-          
-        }}
-        renderLeftIcon={() => (
-          <AntDesign style={styles.icon} color="black" name="Safety" size={20} />
-        )}
-      />
-      <Text style={styles.buttonTxt1}>Away Team</Text>
-      <Dropdown
-        style={styles.dropdown}
-        placeholderStyle={styles.placeholderStyle}
-        selectedTextStyle={styles.selectedTextStyle}
-        inputSearchStyle={styles.inputSearchStyle}
-        iconStyle={styles.iconStyle}
-        data={clothes3}
-        search
-        maxHeight={300}
-        labelField="name"
-        valueField="value"
-        placeholder= {away===""?"Select Away" :away1}
-        searchPlaceholder="Search..."
-        teams={clothes3}
-        onChange={item => {
-            setAway(item.id);
-          
-        }}
-        renderLeftIcon={() => (
-          <AntDesign style={styles.icon} color="black" name="Safety" size={20} />
-        )}
-      />
+      <Text style={{...styles.buttonTxt4,paddingTop:72}}>{dateRS.toLocaleString()}</Text>
+      
       <Text style={styles.buttonTxt1}>Game Location</Text>
       <Dropdown
         style={styles.dropdown}
@@ -400,7 +587,7 @@ useLayoutEffect(() => {
         maxHeight={300}
         labelField="label"
         valueField="value"
-        placeholder="Select game location"
+        placeholder={location2.length!==0?location2:"Select game location"}
         searchPlaceholder="Search..."
         locations={locations}
         onChange={item => {
@@ -411,22 +598,20 @@ useLayoutEffect(() => {
         )}
       />
         
-        <Text style={styles.buttonTxt1}>Start Time</Text>
-      <View style={styles.inputView2}>
-          <DateTimePicker
-          testID="dateTimePicker"
-          value={dateRS}
-          mode={"datetime"}
-          is24Hour={true}
-          onChange={onChange}
-        />
-        </View>
+        <View style={{flex:1, flexDirection:"row", paddingTop:30}}>
           <TouchableOpacity
             style={styles.loginBtn}
             onPress={() => registerPress(myContext)}
           >
-            <Text style={{fontWeight:'bold',color:"#007AFF", fontSize:30}}>ADD GAME</Text>
+            <Text style={{fontWeight:'bold',color:"#007AFF", fontSize:24}}>UPDATE GAME</Text>
           </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.loginBtn1}
+            onPress={() => deletePress()}
+          >
+            <Text style={{fontWeight:'bold',color:"red", fontSize:24}}>DELETE GAME</Text>
+          </TouchableOpacity>
+        </View>
         </View>
       </KeyboardAwareScrollView>
     </>
@@ -454,6 +639,14 @@ const styles = StyleSheet.create({
     fontSize:26,
     fontWeight:'bold'
   },
+  buttonTxt3: {
+    fontSize: 22,
+    padding: 0,
+    alignItems: "center",
+    justifyContent: "center",
+    color: "white",
+    fontWeight: "bold",
+},
   buttonTxt1: {
     fontSize: 28,
     margin: 10,
@@ -463,6 +656,15 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "bold",
 },
+buttonTxt4: {
+  fontSize: 28,
+  margin: 10,
+  paddingTop: 30,
+  alignItems: "center",
+  justifyContent: "center",
+  color: "white",
+  fontWeight: "bold",
+},
   buttonTxt2: {
     fontSize: 13,
     margin: 5,
@@ -470,6 +672,41 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     color: "#007AFF",
+},
+buttonTxt9: {
+  fontSize: 18,
+  
+  paddingLeft: 3,
+  alignItems: "center",
+  justifyContent: "center",
+  color: "white",
+  textAlign:"left"
+},
+buttonTxt19: {
+  fontSize: 18,
+  paddingRight: 10,
+  alignItems: "center",
+  justifyContent: "center",
+  color: "white",
+  textAlign:"right"
+},
+buttonTxt5: {
+  fontSize: 22,
+  padding: 0,
+  alignItems: "center",
+  justifyContent: "center",
+  color: "white",
+  fontWeight: "bold",
+  textAlign:"left"
+},
+buttonTxt6: {
+  fontSize: 22,
+  padding: 0,
+  alignItems: "center",
+  justifyContent: "center",
+  color: "white",
+  fontWeight: "bold",
+  textAlign:"left"
 },
 inputDate: {
   flexDirection:"row",
@@ -497,7 +734,7 @@ inputDate: {
   },
   container: {
     flex: 1,
-    height:600,
+    height:690,
     backgroundColor: "#1C4BA5",
     alignItems: "center",
     justifyContent: "center",
@@ -515,11 +752,10 @@ inputDate: {
   },
  
   inputView2: {
-    flexDirection:"row",
     backgroundColor: "white",
     borderRadius: 30,
-    width: "75%",
-    height: 45,
+    width: "80%",
+    height: 25,
     marginTop:5,
     marginBottom: 20,
     justifyContent: "center",
@@ -558,9 +794,10 @@ inputDate: {
     height: 50,
     flex: 1,
     flexDirection:'row',
-    padding: 10,
-    marginLeft: 20,
-    fontSize:14,
+    padding: 0,
+    fontSize:16,
+    textAlign:"center",
+    fontWeight:'bold'
 
     
   },
@@ -588,12 +825,22 @@ inputDate: {
     backgroundColor:"white"
   },
   loginBtn: {
-    width: "80%",
+    width: "48%",
     borderRadius: 25,
-    height: 50,
+    height: 60,
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 10,
+    marginBottom: 3,
+    marginRight: 10,
+    backgroundColor: "white",
+  },
+  loginBtn1: {
+    width: "48%",
+    borderRadius: 25,
+    height: 60,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 3,
     backgroundColor: "white",
   },
   loginOr: {
