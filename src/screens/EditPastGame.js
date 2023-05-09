@@ -138,6 +138,7 @@ const [shirt, setShirt]=useState();
 const [shirt2, setShirt2]=useState();
 const [shirt1, setShirt1]=useState(true);
 const fetchBlogs9=async()=>{
+  console.log(hL+"\n enkfwfn")
   const myDoc = doc(db, "organization", org, "games", item);
   const user = await getDoc(myDoc);
   const user1 = onSnapshot(myDoc,(doc)=>{
@@ -208,8 +209,8 @@ const awayInfo=async()=>{
   const [location,setLocal]=useState([]);
   const [location2,setLocal2]=useState("");
   const [teams,setTeam]=useState(1);
-  const [homeS1, setHomeS1] = useState("         483834u9   ");
-  const [awayS1, setAwayS1] = useState("          009i09  ");
+  const [homeS1, setHomeS1] = useState("-1");
+  const [awayS1, setAwayS1] = useState("-1");
   const [playerMax,setMaxPlayer]=useState(1);
   const [player,setMinPlayer]=useState(1);
   const [b1,setB1]=useState(false);
@@ -387,7 +388,7 @@ const awayInfo=async()=>{
       if(c2){
         cuh=clothes.url;
       }
-      
+
       
         await setDoc(doc(db, "organization", org,"games",item), 
         { league:name,location:location2,org:org, homeI:home, awayI:away, sport:sport, startDate:Timestamp.fromDate(dateRS), home:home1, away:away1, homeS:hS,awayS:aS,homeL:hL,awayL:aL,final:true });
@@ -509,7 +510,7 @@ const awayInfo=async()=>{
           < View style={{paddingLeft:hL===undefined?0:50-(6*hL),flex:1, }}>
             <Text style={styles.buttonTxt5}>{clothes5.name}</Text>        
           </View> 
-          < View style={{flex:1,paddingLeft:aL===undefined?0:166-(10*(aL)),}}>
+          < View style={{paddingRight:aL===undefined?0:50-(6*(aL)),}}>
             <Text style={styles.buttonTxt6}>{clothes6.name}</Text> 
           </View>
         </View>

@@ -66,6 +66,23 @@ export default function Home ({navigation, route}) {
         let a ="Manage "+name;
         navigation.navigate('Manage Organization',{name:a});
       }
+      async function fetchBlogs4(name,item,org,league,myContext)  {
+        myContext.setMO(org);
+        myContext.setML(league);
+        const q = query(collection(db, "organization", org, "teams"), where("name", "==", name), where("league", "==", league));
+        let team2="";
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((doc) => {
+        // doc.data() is never undefined for query doc snapshots
+        console.log(doc.id, " => ", doc.data());
+            team2=doc.id;
+        });
+        myContext.setMT(team2);
+        let a ="Manage "+name;
+        navigation.navigate('Manage Team',{
+            screen: 'Team Settings',
+            params:{name:a, team:team2,teamId:item,league:league,org:org},});
+      }
     useEffect(() => {
         fetchBlogs();
     }, []);
@@ -99,7 +116,7 @@ export default function Home ({navigation, route}) {
                         <View style={styles.list}>
                             <TouchableOpacity
                                 style={styles.items}
-
+                                onPress={() => fetchBlogs4(item.name,item.id,item.org,item.league,myContext)} 
                             >
                                 <View style={styles.budgetTagsContainer}>
                                     <Text style={styles.name}>{item.name}</Text>

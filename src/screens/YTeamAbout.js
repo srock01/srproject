@@ -18,7 +18,7 @@ import {
   get,
   doc,
   getDoc,
-  deleteDoc,
+  limit,
   query,
   where,
   setDoc,
@@ -40,17 +40,17 @@ require("firebase/firestore");
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-export default function TeamsAbout({route, navigation, navigation: { goBack }}) {
+export default function YTeamsAbout({route, navigation, navigation: { goBack }}) {
   
   const myContext= useContext(Context)
   const { name,org,team,b,} = route.params;
-  const league = myContext.tL;
+  const league = myContext.ytL;
   const e = myContext.email;
   async function registerPress() {
     if(b1===0){
       
-      await setDoc(doc(db, "users", e,"requests",name),{
-        team: name, league:league, org:org   
+      await setDoc(doc(db, "users", e,"requests",name,"requests",e),{
+        team: arrayUnion(name),   
       });
       await setDoc(doc(db, "organization", org,"teams",name,"requests",e), 
             { unseen:true,});
@@ -82,28 +82,6 @@ export default function TeamsAbout({route, navigation, navigation: { goBack }}) 
       await addDoc(collection(db, "users", e,"teams"), 
             { name:team,league:b4, 
               org:org,isManager:false});
-      
-
-      let list= [];
-      let pool;
-      const q=query(collection(db, "users", e, "requests"), where("org", "==", org), where("league", "==", league));
-      const querySnapshot = await getDocs(q);
-            
-      querySnapshot.forEach((doc) => {
-        pool=doc.data().team
-        console.log(pool+"shit");
-
-        
-                
-                list.push(pool );
-           
-                
-            });   
-      for(let x=0;x<list.length;x++){
-        console.log(list[x]+"crap");
-        await deleteDoc(doc(db, "organization", org, "teams",list[x],"requests",e));
-        await deleteDoc(doc(db, "users", e, "requests",list[x]));
-      }   
       Alert.alert("Joined Team Successfully","",  [
         { text: "OK", onPress: () => goBack() },
       ]); 
@@ -116,12 +94,12 @@ export default function TeamsAbout({route, navigation, navigation: { goBack }}) 
   useLayoutEffect(() => {
   }, []);
   useFocusEffect(
-    () => {  myContext.setT(name);
+    () => {  myContext.setYT(name);
        }, 
     
     );
   
-  console.log(name+" "+e+org);
+  console.log(league+"\ncrap "+e+org);
   const [wL, setwL] = useState(1);
   const [lL, setlL] = useState(1);
   const [clothes, setClothes] = useState({});

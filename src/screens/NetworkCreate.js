@@ -135,7 +135,7 @@ export default function NetworkCreate({route, navigation}) {
       else
     {try {
         await setDoc(doc(db, "organization", name), 
-        { name:name,locations:locations,url:cuh,owner:email });
+        { name:name,locations:locations,url:cuh,owner:email,members:[email] });
         console.log("clothing article added");
         const washingtonRef = doc(db, "users", email);
 
@@ -143,13 +143,16 @@ export default function NetworkCreate({route, navigation}) {
         await updateDoc(washingtonRef, {
             organizationsOwned: arrayUnion(name)
         });
+        await updateDoc(washingtonRef, 
+          {  
+            orgs:arrayUnion(org)});
         
     } catch (e) {
       console.error("Error adding document: ", e);
     }}}
 
   }
-  const [image, setImage] = useState(null);
+  const [image, setImage] = useState("https://firebasestorage.googleapis.com/v0/b/srproject-75728.appspot.com/o/pfp?alt=media&token=08061401-3b08-44df-9cb7-d88bf6f53e87");
   async function  pickImage ()  {
     let mom;
     let user1 = await getDoc(doc(db, "users", email));

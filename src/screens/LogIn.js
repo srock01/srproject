@@ -179,7 +179,7 @@ export default function LogIn({ navigation, navigation:{goBack} }) {
 
                     <TouchableOpacity
                         style={styles.loginBtn}
-                        onPress={() => {c?getUserData2(myContext):fortnite(myContext,email,password,navigation)}}
+                        onPress={() => {userInfo.email!==undefined?getUserData2(myContext):fortnite(myContext,email,password,navigation)}}
                     >
                         <Text style={styles.registerText}>LOGIN</Text>
                     </TouchableOpacity>

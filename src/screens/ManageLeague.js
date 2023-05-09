@@ -165,7 +165,7 @@ useEffect(() => {
                <View style={styles.budgetTagsContainer}>
                 <Text style={styles.name1}>{item.home}</Text>
                 <Text style={styles.name}>VS</Text>
-                <Text style={styles.name}>{item.away}</Text>
+                <Text style={styles.name2}>{item.away}</Text>
               </View>
             </TouchableOpacity>
           </View>)}/>
@@ -182,7 +182,7 @@ useEffect(() => {
                <View style={styles.budgetTagsContainer}>
                 <Text style={styles.name1}>{item.home}</Text>
                 <Text style={styles.name}>VS</Text>
-                <Text style={styles.name}>{item.away}</Text>
+                <Text style={styles.name2}>{item.away}</Text>
               </View>
             </TouchableOpacity>
           </View>)}/>
@@ -236,11 +236,25 @@ name: {
     color: "#333333",
     fontSize: 15,
     borderColor: "black",
-    flex:1,
     fontWeight: "bold",
     paddingTop: 10,
     paddingBottom: 10,
+    paddingRight:30,
+    paddingLeft:30,
     justifyContent:"center",
+},
+name2: {
+  flexDirection: "row",
+  alignItems: "center",
+  fontWeight: "100",
+  color: "#333333",
+  fontSize: 15,
+  borderColor: "black",
+  fontWeight: "bold",
+  paddingTop: 10,
+  paddingBottom: 10,
+  paddingRight:20,
+  justifyContent:"center",
 },
 name1: {
   flexDirection: "row",
@@ -250,8 +264,7 @@ name1: {
   fontSize: 15,
   alignItems: "left",
   borderColor: "black",
-  flex:1,
-  paddingLeft:45,
+  paddingLeft:0,
   fontWeight: "bold",
   paddingTop: 10,
   paddingBottom: 10,

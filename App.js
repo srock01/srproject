@@ -21,16 +21,14 @@ import Teams from "./src/screens/TeamsList";
 import TeamsAbout from "./src/screens/TeamAbout";
 import TeamSchedule from "./src/screens/TeamSchedule";
 import TeamsStats from "./src/screens/TeamStats";
+import YTeamsAbout from "./src/screens/YTeamAbout";
+import YTeamSchedule from "./src/screens/YTeamSchedule";
+import YTeamsStats from "./src/screens/YTeamStats";
 import Manager1 from "./src/screens/Manager";
 import LoadIn from "./src/screens/LoadIn";
 import LogIn from "./src/screens/Login";
 import SignUp from "./src/screens/signup1";
-/*import Article from "./src/screens/Article";
-import ForgotPassword from "./src/screens/ForgotPassword";
-*/
-import Schedule from "./src/screens/Calendar";
-//import AddArticle from "./src/screens/AddArticle";
-//import Outfit from "./src/screens/Outfit";
+import ManageTeam from "./src/screens/ManageTeam";
 import ManageNetwork from "./src/screens/ManageNetwork";
 import LeagueCreate from "./src/screens/LeagueCreate";
 import ManageLeague from "./src/screens/ManageLeague";
@@ -40,14 +38,19 @@ import LeagueSettings from "./src/screens/LeagueSettings";
 import GameAdd from "./src/screens/GameAdd";
 import GameUEdit from "./src/screens/EditUpcomingGame";
 import GamePEdit from "./src/screens/EditPastGame";
+import GameUView from "./src/screens/GameUView";
+import GamePView from "./src/screens/GamePView";
 
 import Network3 from "./src/screens/NetworkChoose";
 import Network from "./src/screens/NetworkCreate";
+import NetworkJoin from "./src/screens/NetworkJoin";
+import OrgView from "./src/screens/OrgView";
 import NetworkView from "./src/screens/NetworkView";
 import LeagueView from "./src/screens/LeagueView";
 import LeagueTeams from "./src/screens/LeagueTeams";
 
 import CreateTeam from "./src/screens/CreateTeam";
+import PlayerRequest from "./src/screens/PlayerRequest";
 
 /*import AddOutfit from "./src/screens/AddOutfit";
 */
@@ -63,10 +66,30 @@ const firebaseConfig = {
   const Tab = createBottomTabNavigator();
   const Tab1 = createMaterialTopTabNavigator();
 
-  
+  const ManageTeam1 = () => {
+    return (
+        <Tab1.Navigator screenOptions={{
+          tabBarLabelStyle: { fontSize: 12, fontWeight:'bold' },
+          tabBarItemStyle: { flex: 1 },
+          tabBarStyle: { backgroundColor: 'powderblue' },
+        }}>
+          <Stack.Screen
+        name="Team Settings"
+        component={ManageTeam}
+       />
+          <Tab1.Screen
+            name="Player Requests"
+            component={PlayerRequest}
+          />
+          
+          
+          
+          </Tab1.Navigator>
+          );
+          }
   const Manager = () => {
     const myContext=useContext(Context);
-    let poo= myContext.editing;
+    let boo= myContext.editing;
     return (
     <Stack.Navigator>
       <Stack.Screen
@@ -80,6 +103,11 @@ const firebaseConfig = {
         options={({route})=>({ title: route.params.name,headerShown: true })}
       />
       <Stack.Screen
+        name="Manage Team"
+        component={ManageTeam1}
+        options={({route})=>({ title: route.params.name,headerShown: true })}
+      />
+      <Stack.Screen
         name="Create League"
         component={LeagueCreate}
         options={{ headerShown: true }}
@@ -87,13 +115,15 @@ const firebaseConfig = {
       <Stack.Screen
         name="Manage League"
         component={ManageLeague2}
-        options={({route})=>({ title: route.params.name,headerShown:poo?false:true })}
+        options={({route})=>({ title: route.params.name,headerShown:boo?false:true })}
       />
       
     </Stack.Navigator>
   );
   }
   const NetworkManager = () => {
+    const myContext = useContext(Context);
+    let bee=myContext.hDraw;
     return (
     <Stack.Navigator>
       <Stack.Screen
@@ -114,7 +144,7 @@ const firebaseConfig = {
       <Stack.Screen
         name="OTeam"
         component={FirstScreenStack1}
-        options={{ headerShown: true }}
+        options={{title:"View Team", headerShown: bee?true:false }}
       />
     </Stack.Navigator>
   );
@@ -141,12 +171,24 @@ const firebaseConfig = {
           );
           }
   const Networks = () => {
+    const myContext=useContext(Context);
+    let poo= myContext.boole2;
     return (
     <Stack.Navigator>
       <Stack.Screen
         name="Networks"
         component={Network3}
         options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Join Organization"
+        component={NetworkJoin}
+        options={{ headerShown: poo?true:false }}
+      />
+      <Stack.Screen
+        name="View Organization"
+        component={OrgView}
+        options={{ headerShown: true }}
       />
       <Stack.Screen
         name="NetworkC"
@@ -218,7 +260,71 @@ const firebaseConfig = {
           </Tab1.Navigator>
           );
           }
-
+          const YTeamGames = () => {
+            return (
+            <Stack.Navigator
+            >
+              <Stack.Screen
+                name="  Back"
+                component={YTeamSchedule}  
+                options={{ headerShown: false }}       
+              />
+              <Stack.Screen
+                name="View Game"
+                component={GamePView}            
+              />
+              <Stack.Screen
+                name="View Game "
+                component={GameUView}            
+              />
+            </Stack.Navigator>
+          );
+          }
+const TeamGames = () => {
+            return (
+            <Stack.Navigator
+            >
+              <Stack.Screen
+                name=" Back"
+                component={TeamSchedule}  
+                options={{ headerShown: false }}       
+              />
+              <Stack.Screen
+                name="View Game"
+                component={GamePView}            
+              />
+              <Stack.Screen
+                name="View Game "
+                component={GameUView}            
+              />
+            </Stack.Navigator>
+          );
+          }
+          const FirstScreenStack2 = () => {
+            return (
+                <Tab1.Navigator
+                screenOptions={{
+                  tabBarLabelStyle: { fontSize: 12, fontWeight:'bold' },
+                  tabBarItemStyle: { flex: 1 },
+                  tabBarStyle: { backgroundColor: 'powderblue' },
+                }}>
+                  <Tab1.Screen
+                    name="About "
+                    component={YTeamsAbout}            
+                  />
+                  <Tab1.Screen
+                    name="Schedule "
+                    component={YTeamGames}            
+                  />
+                  
+                  <Tab1.Screen
+                    name="Standings "
+                    component={YTeamsStats}            
+                  />
+                  
+                  </Tab1.Navigator>
+                  );
+                  }
   const FirstScreenStack1 = () => {
     return (
         <Tab1.Navigator
@@ -233,11 +339,11 @@ const firebaseConfig = {
           />
           <Tab1.Screen
             name="Schedule"
-            component={TeamSchedule}            
+            component={TeamGames}            
           />
           
           <Tab1.Screen
-            name="Stats"
+            name="Standings"
             component={TeamsStats}            
           />
           
@@ -288,6 +394,8 @@ const firebaseConfig = {
     );
   }
   const Teamd = () => {
+    const myContext = useContext(Context);
+    let bee=myContext.sd;
     return (
     <Stack.Navigator
     >
@@ -298,8 +406,8 @@ const firebaseConfig = {
       />
       <Stack.Screen
         name="Team"
-        component={FirstScreenStack1}
-        options={({route})=>({ title:route.params.name,headerShown: true })}
+        component={FirstScreenStack2}
+        options={({route})=>({ title:"Your Team",headerShown:bee?true:false })}
       />
     </Stack.Navigator>
   );
@@ -322,21 +430,33 @@ const App = (route) => {
     const backgroundStyle = {
         backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
     };
+    const [boole3, setBoole3] = React.useState({value: false});
+
+    const [boole2, setBoole2] = React.useState({value: false});
     const [boole, setBoole] = React.useState({value: false});
     const [email, setE] = React.useState("");
     const [team, setT] = React.useState("");
+    const [yteam, setYT] = React.useState("");
+    const [mteam, setMT] = React.useState("");
+    const [mO, setMO] = React.useState("");
+    const [mL, setML] = React.useState("");
     const [o, setO] = React.useState("");
     const [league, setL] = React.useState("");
     const [uLeague, setUL] = React.useState("");
     const [tO, setTO] = React.useState("");
     const [tL, setTL] = React.useState("");
+    const [ytO, setYTO] = React.useState("");
+    const [ytL, setYTL] = React.useState("");
     const [nwork, setN] = React.useState("");
     let [hDraw, setD] =React.useState(true);
+    let [sd, setSD] =React.useState(true);
+
     let [editing, setEditing] =React.useState(false);
     let [b, setB] =React.useState(boole.value);
-    const userSetting = {boole:boole, 
-        setBoole ,email:email,setE,b:b,setB,team:team, setT,hDraw:hDraw, setD, editing:editing,setEditing,
-        league:league, setL,uLeague:uLeague, setUL, nwork:nwork, setN,o:o,setO,tO:tO,setTO,tL:tL,setTL,};
+    const userSetting = {boole2:boole2, setBoole ,boole3:boole3, setBoole3 ,boole:boole, setBoole2, email:email,setE,b:b,setB,team:team, setT,
+        yteam:yteam, setYT,hDraw:hDraw, setD,sd:sd, setSD, editing:editing,setEditing,
+        league:league, setL,uLeague:uLeague, setUL, nwork:nwork, setN,o:o,setO,tO:tO,setTO,
+        tL:tL,setTL,ytO:ytO,setYTO,ytL:ytL,setYTL,mO:mO,setMO,mL:mL,setML,mteam:mteam, setMT,};
     const [checking, setIsChecking] = React.useState(true);
     console.log(boole);
     console.log(b);
@@ -348,7 +468,7 @@ const App = (route) => {
             <Drawer.Navigator
         screenOptions={({ route }) => ({
           
-          headerShown:  hDraw? true:false,
+          headerShown:  true,
           drawerStyle: {
             backgroundColor: '#c6cbef', //Set Drawer background
             width: 250, //Set Drawer width

@@ -53,27 +53,33 @@ const acceptingFAs = [
   { label: 'YES ', value: '1' },
   { label: 'NO', value: '2' },
 ];
-export default function CreateTeam({route, navigation, navigation:{goBack}}) {
+export default function ManageTeam({route, navigation, navigation:{goBack}}) {
   //var [ isPress, setIsPress ] = React.useState(false);
   const myContext=useContext(Context);
+  const  e  = myContext.email;
   const  email  = myContext.email;
-  const {  league,org} = route.params;
+  const {  team,teamId,league,org} = route.params;
 
   let arr=[];
+  const [location3,setLocal3]=useState([]);
+  const [pic,setPic]=useState("");
   const [location,setLocal]=useState([]);
   const [location2,setLocal2]=useState("");
   const [locations,setLocations]=useState([]);
   const [clothes,setClothes]=useState([]);
 
+  const [clothes1, setClothes1] = useState([]);
+  const [clothes2, setClothes2] = useState([]);
+
   const [teams,setTeam]=useState(1);
   const [playerMax,setMaxPlayer]=useState(1);
   const [player,setMinPlayer]=useState(1);
-  const [name, setName] = useState("");
+  const [name1, setName1] = useState("");
   const [weather, setWeather] = useState("");
   const [size, setSize] = useState("");
   const [type, setType] = useState("");
-  const [sport, setSport] = useState(null);
-  const [sport2, setSport2] = useState(null);
+  const [sport, setSport] = useState("");
+  const [sport2, setSport2] = useState("");
   const [c,setC]=useState(true);
   let a =2;
   const fB = async () => {
@@ -137,6 +143,37 @@ export default function CreateTeam({route, navigation, navigation:{goBack}}) {
     fetchBlogs2();
 }, [location2]);
 
+const fetchBlogs5 = async () => {
+    console.log(org+" "+e+" "+org+"\nborbp"+team);
+    const myDoc = doc(db, "organization", org, "teams", team)
+    const user = await getDoc(myDoc);
+    console.log("shit"+user.data())
+    const myDoc3 = doc(db, "organization", org, "teams",team,"requests",e)
+    const request1 = await getDoc(myDoc3);
+    console.log("shit"+user.data().name)
+    if (user.exists()){
+      console.log(user.get("currentPlayer")+"  gggg   ");
+      setName1(user.data().name);
+      if (user.data().coachO)
+        setSport("Coach Only");
+      else
+        setSport("Player Manager ");
+      if (user.data().aFA)
+        setSport2("YES");
+      else
+        setSport2("NO");
+      setLocal3(user.get("Players"))
+      setImage(user.get("url"))
+      
+      console.log(user.get("Players"));
+     
+      
+    }
+};   
+useEffect(() => {
+  fetchBlogs5();
+}, []);
+
 
 
  
@@ -153,7 +190,7 @@ export default function CreateTeam({route, navigation, navigation:{goBack}}) {
       } 
     try{
       if(c){
-        cuh="https://firebasestorage.googleapis.com/v0/b/srproject-75728.appspot.com/o/pfp?alt=media&token=08061401-3b08-44df-9cb7-d88bf6f53e87"
+        cuh=image
       }
       else{
           
@@ -193,27 +230,42 @@ export default function CreateTeam({route, navigation, navigation:{goBack}}) {
       let pe=1;
       let pr=false;
       let pq=email;
-        if(sport2==="YES")
+      let plist=[];
+        if(sport2==="YES"){
           pr=true;
+          
+        }
       let p=false;
         if(sport==="Coach Only"){
           p=true;
           pe=0;
           pq=null;
+          for(let j=0;j<location3.length;j++){
+            if (location3[j]!==e)
+              plist.push(location3[j])
+          }
         }
-        await addDoc(collection(db, "organization", org,"teams"), 
-        { name:name,league:league,url:cuh,owner:email, 
-          currentPlayer:pe,coachO:p, aFA:pr, Players:[],org:org, win:0, loss:0, tie:0 });
+        else{
+          let pol=true;
+          for(let j=0;j<location3.length;j++){
+            plist.push(location3[j])
+            if (location3[j]===e)
+              pol=false;
+          }
+          if (pol)
+            plist.push(e)
+        }
+        await setDoc(doc(db, "organization", org,"teams",team), 
+        { name:name1,league:league,url:cuh,owner:email, 
+          currentPlayer:plist.length,coachO:p, aFA:pr, Players:[],org:org, win:0, loss:0, tie:0 });
         console.log("clothing article added");
-        await addDoc(collection(db, "users", email,"teams"), 
-        { name:name,league:league,url:cuh, 
+        await setDoc(doc(db, "users", email,"teams",teamId), 
+        { name:name1,league:league,url:cuh, 
           org:org,isManager:true, win:0, loss:0, tie:0});
         const washingtonRef = doc(db, "organization", org,"league",league);
 
         // Atomically add a new region to the "regions" array field.
-      await updateDoc(washingtonRef, {
-           currentTeams: increment(1)
-        });
+      
       navigation.goBack();    
   } catch (e) {
       Alert.alert("Creation Failure", "Stop", [
@@ -223,12 +275,11 @@ export default function CreateTeam({route, navigation, navigation:{goBack}}) {
             style: "cancel",
         },
     ]);
-    console.log("Incorrect password.");
+    console.log(e);
     }
 
   }
-  const [image, setImage] = 
-  useState("https://firebasestorage.googleapis.com/v0/b/srproject-75728.appspot.com/o/pfp?alt=media&token=08061401-3b08-44df-9cb7-d88bf6f53e87");
+  const [image, setImage] = useState("")
   async function  pickImage ()  {
     let mom;
     let user1 = await getDoc(doc(db, "users", email));
@@ -277,13 +328,14 @@ export default function CreateTeam({route, navigation, navigation:{goBack}}) {
 
       <View style={styles.container}>
         <StatusBar style="auto" />
-        
+       
+    
         <View style={styles.inputView}>
           <TextInput
             style={styles.TextInput}
-            placeholder="TEAM NAME"
+            placeholder={"TEAM NAME: " +name1}
             placeholderTextColor="#007AFF"
-            onChangeText={(name) => setName(name)}
+            onChangeText={(name1) => setName1(name1)}
           />
         </View>
         
@@ -307,7 +359,7 @@ export default function CreateTeam({route, navigation, navigation:{goBack}}) {
         maxHeight={300}
         labelField="label"
         valueField="value"
-        placeholder="Player Manger/Coach Only"
+        placeholder={sport.length!==0?sport:"Player Manger/Coach Only"}
         searchPlaceholder="Search..."
         sport={sport}
         onChange={item => {
@@ -328,7 +380,7 @@ export default function CreateTeam({route, navigation, navigation:{goBack}}) {
         maxHeight={300}
         labelField="label"
         valueField="value"
-        placeholder="Auto-Accept Free Agents?"
+        placeholder={sport2.length!==0?sport2:"Auto-Accept Free Agents?"}
         searchPlaceholder="Search..."
         sport={sport2}
         onChange={item => {
@@ -388,7 +440,7 @@ export default function CreateTeam({route, navigation, navigation:{goBack}}) {
             style={styles.loginBtn}
             onPress={() => registerPress()}
           >
-            <Text style={{fontWeight:'bold',color:"#007AFF"}}>CREATE TEAM</Text>
+            <Text style={{fontWeight:'bold',color:"#007AFF"}}>Update TEAM</Text>
           </TouchableOpacity>
         </View>
       </KeyboardAwareScrollView>
@@ -435,6 +487,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     padding:10,
     height: 40,
+  },
+  bruh: {
+    backgroundColor: '#1C4BA5',
   },
   container: {
     flex: 1,
@@ -484,7 +539,22 @@ const styles = StyleSheet.create({
 
     
   },
-
+  title: {
+    display: 'flex',
+    justifyContent: 'right',
+    alignItems: 'right',
+    fontWeight: '600',
+    fontSize: 30,
+    marginVertical: 10,
+    color: 'white'
+  },
+  title2: {
+    fontWeight: '300',
+    fontSize: 26,
+    marginTop: 8,
+    paddingHorizontal: 10,
+    color: 'black'
+  },
 
   forgot_button: {
     height: 30,

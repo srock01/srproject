@@ -37,20 +37,20 @@ require("firebase/firestore");
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-export default function TeamsSchedule({route, navigation, navigation: { goBack }}) {
+export default function YTeamsSchedule({route, navigation, navigation: { goBack }}) {
   
   const myContext= useContext(Context)
-  const name = myContext.team;
+  const name = myContext.yteam;
   const e = myContext.email;
-  const org = myContext.tO;
-  const league = myContext.tL;
+  const org = myContext.ytO;
+  const league = myContext.ytL;
   //const  e = route.params.e;
   const [clothes, setClothes] = useState({});
   const [clothes1, setClothes1] = useState([]);
   const [clothes2, setClothes2] = useState([]);
   useFocusEffect(
     () => {  
-    myContext.setD(true); }, 
+    myContext.setSD(true); }, 
     
     );
   const fetchBlogs=async()=>{
@@ -66,12 +66,12 @@ export default function TeamsSchedule({route, navigation, navigation: { goBack }
 function fetchBlogs1(item,homeI,awayI,homeL,awayL,myContext)  {
     
   console.log(item.id+"bungus\N"+homeI)
-  navigation.navigate('View Game ',{item:item.id,homeI:homeI,awayI:awayI, hL:homeL,aL:awayL,yte:false,name:league,org:org});
+  navigation.navigate('View Game ',{item:item.id,homeI:homeI,awayI:awayI, hL:homeL,aL:awayL,yte:true,name:league,org:org});
 }
 function fetchBlogs4(item,homeI,awayI,homeL,awayL,myContext)  {
   
   console.log(item.id+"bungus\N"+homeI)
-  navigation.navigate('View Game',{item:item.id,homeI:homeI,awayI:awayI, hL:homeL,aL:awayL,yte:false,name:league,org:org});
+  navigation.navigate('View Game',{item:item.id,homeI:homeI,awayI:awayI, hL:homeL,aL:awayL,yte:true,name:league,org:org});
 }
 useEffect(() => {
   fetchBlogs();

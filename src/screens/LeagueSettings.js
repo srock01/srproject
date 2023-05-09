@@ -370,10 +370,10 @@ useLayoutEffect(() => {
         <StatusBar style="auto" />
         
         <View style={styles.inputView}>
-          {setName3}
+          
           <TextInput
             style={styles.TextInput}
-            placeholder={"League Name: "+name}
+            placeholder={name}
             editable={false}
             placeholderTextColor="black"
             onChangeText={(name) => setName(name)}

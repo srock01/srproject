@@ -60,8 +60,8 @@ export default function NetworkChoose ({navigation, route}) {
     
     console.log(email+'fjds');
     const unsub = onSnapshot(doc(db, "users", email), (doc) => {
-      console.log("Current data: ", doc.data().organizationsOwned[0]);
-      setClothes(doc.data().organizationsOwned)
+      console.log("Current data: ", doc.data().orgs[0]);
+      setClothes(doc.data().orgs)
     });
     //const q=query(collection(db, "users", email, "networks"));
     /*const washingtonRef = await getDoc(doc(db, "users", email));
@@ -114,7 +114,7 @@ useEffect(() => {
           onPress={() =>
             navigation.navigate('FirstPage',   {screen: 'Organization',
             params: {
-                screen: 'NetworkC',},})}>
+                screen: 'Join Organization',},})}>
           <View>
             <Text style={styles.buttonTxt}>JOIN ORG</Text>
           </View>
