@@ -26,7 +26,7 @@ const db = getFirestore(app);
 export default function PlayerRequest ({navigation, route}) {
   const [clothes, setClothes] = useState([]);
   const [clothes2, setClothes2] = useState([]);
-
+  const [name2, setName2] = useState("");
   const myContext = useContext(Context);
   const name = myContext.mteam;
   const e = myContext.email;
@@ -56,7 +56,9 @@ export default function PlayerRequest ({navigation, route}) {
       fB();
     }, [clothes]);
     const fetchBlogs = async () => {
-        
+      const myDoc = doc(db, "organization", org, "teams", name)
+      const user = await getDoc(myDoc);
+      setName2(user.data().name);
         console.log(email+'fjds'+org+"ffff"+league);
         const list = [];
         const q=query(collection(db, "organization", org, "teams",name,"requests"));
@@ -82,21 +84,23 @@ export default function PlayerRequest ({navigation, route}) {
     }, []);
     var str = "<";
     async function accept(name1) {
+      let array3= [...clothes2]
+      const index = array3.indexOf(name1);
       let list= [];
       let pool;
       const washingtonRef2 = doc(db, "organization", org,"teams",name);
       await updateDoc(washingtonRef2, {
-        Players: arrayUnion(e)
+        Players: arrayUnion(clothes[index].id)
       });
-      await addDoc(collection(db, "users", e,"teams"), 
-          { name:name,league:league, 
+      await addDoc(collection(db, "users", clothes[index].id,"teams"), 
+          { name:name2,league:league, 
             org:org,isManager:false});
 
-      const q=query(collection(db, "users", e, "requests"), where("org", "==", org), where("league", "==", league));
+      const q=query(collection(db, "users", clothes[index].id, "requests"), where("org", "==", org), where("league", "==", league));
       const querySnapshot = await getDocs(q);
             
       querySnapshot.forEach((doc) => {
-        pool=doc.data().team
+        pool=doc.id
         console.log(pool+"shit");
 
         
@@ -107,11 +111,10 @@ export default function PlayerRequest ({navigation, route}) {
             });   
       for(let x=0;x<list.length;x++){
         console.log(list[x]+"crap");
-        await deleteDoc(doc(db, "organization", org, "teams",list[x],"requests",e));
-        await deleteDoc(doc(db, "users", email, "requests",list[x]));
+        await deleteDoc(doc(db, "organization", org, "teams",list[x],"requests",clothes[index].id));
+        await deleteDoc(doc(db, "users", clothes[index].id, "requests",list[x]));
       }   
-      let array3= [...clothes2]
-      const index = array3.indexOf(name1);
+      
       console.log(index);
       console.log(name);
       console.log(clothes2[0]+"fifty");
@@ -127,11 +130,11 @@ export default function PlayerRequest ({navigation, route}) {
 
       let array3= [...clothes2]
       const index = array3.indexOf(name1);
-      await deleteDoc(doc(db, "organization", org, "teams",name,"requests",e));
-      await deleteDoc(doc(db, "users", email, "requests",name));
+      await deleteDoc(doc(db, "organization", org, "teams",name,"requests",clothes[index].id));
+      await deleteDoc(doc(db, "users", clothes[index].id, "requests",name));
 
       console.log(index);
-      console.log(name1);
+      console.log(name);
       console.log(clothes2[0]);
   
     

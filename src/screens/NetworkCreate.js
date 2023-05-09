@@ -145,7 +145,7 @@ export default function NetworkCreate({route, navigation}) {
         });
         await updateDoc(washingtonRef, 
           {  
-            orgs:arrayUnion(org)});
+            orgs:arrayUnion(name)});
         
     } catch (e) {
       console.error("Error adding document: ", e);
